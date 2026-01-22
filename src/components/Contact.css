@@ -1,0 +1,149 @@
+/* Contact.css */
+
+.contact {
+    padding: 4rem 2rem;
+    background-color: transparent;
+    /* Assuming main bg handles it, or use var(--bg-dark) */
+    color: var(--text-light);
+    overflow: hidden;
+    /* To handle slide-in elements not causing scrollbars */
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* LEFT SIDE: Illustration */
+.contact-illustration {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    /* Add a subtle float or glow if desired, user didn't specify but fits 'Moon' theme */
+    filter: drop-shadow(0 0 20px rgba(123, 51, 126, 0.3));
+}
+
+/* RIGHT SIDE: Form Wrapper */
+.contact-form-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+/* Glassmorphism Input Styles */
+.glass-input {
+    width: 100%;
+    padding: 1rem;
+    font-family: var(--font-main);
+    font-size: 1rem;
+    color: var(--text-light);
+
+    /* Glass Effect */
+    background: rgba(66, 13, 75, 0.25);
+    /* Low opacity purple based on --bg-surface */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.glass-input::placeholder {
+    color: rgba(245, 213, 224, 0.6);
+    /* --text-light with opacity */
+}
+
+/* Focus State - Glow with --secondary */
+.glass-input:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 15px var(--secondary);
+    background: rgba(66, 13, 75, 0.4);
+}
+
+.full-width {
+    width: 100%;
+    resize: vertical;
+    /* Allow vertical resize only */
+}
+
+/* Send Button */
+.send-btn {
+    padding: 1rem 2rem;
+    font-family: var(--font-main);
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    align-self: flex-start;
+    /* Align left, or 'stretch' for full width */
+    min-width: 150px;
+    text-align: center;
+}
+
+.send-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(102, 103, 171, 0.6);
+    /* Glow with secondary tone */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contact-container {
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .contact-illustration,
+    .contact-form-wrapper {
+        flex: none;
+        width: 100%;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}

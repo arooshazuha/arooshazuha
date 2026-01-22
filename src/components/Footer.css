@@ -1,0 +1,181 @@
+/* Footer.css */
+.footer {
+    background: rgba(33, 6, 53, 0.95);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    padding: 4rem 2rem 2rem;
+    margin-top: auto;
+    /* Pushes footer to bottom if flex container is used */
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Column Common Styles */
+.footer-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.footer-col h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+/* Column 1: Identity */
+.footer-logo {
+    font-size: 2rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+
+.footer-tagline {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    max-width: 250px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.social-icon {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.social-icon:hover {
+    color: var(--secondary);
+    transform: translateY(-3px);
+}
+
+.copyright {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    margin-top: 1rem;
+}
+
+/* Column 2: Quick Links */
+.quick-links ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.quick-links a {
+    text-decoration: none;
+    color: var(--text-light);
+    /* Default text color */
+    transition: color 0.3s ease, padding-left 0.3s ease;
+    position: relative;
+}
+
+.quick-links a:hover {
+    color: var(--secondary);
+    padding-left: 5px;
+    /* Subtle slide effect */
+}
+
+/* Column 3: Newsletter */
+.newsletter p {
+    font-size: 0.95rem;
+    opacity: 0.8;
+    margin-bottom: 0.5rem;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 0.5rem;
+    /* Space between input and button */
+    /* Stack on small screens if needed, but side-by-side usually looks good */
+}
+
+/* Reusing glassmorphism style but scoped to footer if needed, or keeping standalone */
+.glass-input-footer {
+    flex: 1;
+    /* Take available space */
+    padding: 0.8rem 1rem;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    color: var(--text-light);
+
+    /* Glass Effect */
+    background: rgba(66, 13, 75, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    /* Slightly smaller radius than contact form */
+
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.glass-input-footer::placeholder {
+    color: rgba(245, 213, 224, 0.5);
+}
+
+.glass-input-footer:focus {
+    border-color: var(--secondary);
+    background: rgba(66, 13, 75, 0.4);
+}
+
+.subscribe-btn {
+    padding: 0 1.2rem;
+    font-family: var(--font-main);
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: white;
+    background: var(--primary);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.subscribe-btn:hover {
+    background: var(--secondary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+        /* Stack to 1 column */
+        text-align: center;
+    }
+
+    .footer-tagline {
+        margin: 0 auto;
+        /* Center align tagline */
+    }
+
+    .social-icons {
+        justify-content: center;
+        /* Center icons */
+    }
+
+    .newsletter-form {
+        flex-direction: column;
+        /* Stack input and button on very small screens */
+    }
+
+    .subscribe-btn {
+        padding: 0.8rem;
+    }
+}

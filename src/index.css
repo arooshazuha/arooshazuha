@@ -1,0 +1,195 @@
+:root {
+  --bg-dark: #210635;
+  /* Deepest purple for main background */
+  --bg-surface: #420d4b;
+  /* Lighter purple for navbars/cards */
+  --primary: #7b337e;
+  /* Middle purple for buttons/accents */
+  --secondary: #6667ab;
+  /* Periwinkle for hovers/secondary items */
+  --text-light: #f5d5e0;
+  /* Pale pink for text */
+  --font-main: "Outfit", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: var(--bg-dark);
+  color: var(--text-light);
+  font-family: var(--font-main);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Scrollbar for Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--secondary);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Container for the background effects */
+.background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  /* Tech Background Image */
+  background-image: url("./assets/tech-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Overlay to ensure text readability */
+.background-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(33, 6, 53, 0.85);
+  /* Dark purple tint override */
+  backdrop-filter: blur(3px);
+  /* Subtle blur to soften the busy circuit lines */
+}
+
+/* Common style for the glowing orbs */
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  /* Increased blur for smoother ambiance */
+  opacity: 0.5;
+  animation: floatOrb 20s infinite alternate ease-in-out;
+  z-index: 1;
+  /* Above the image overlay */
+}
+
+/* Orb 1: Cyan/Tech Blue */
+.orb-1 {
+  width: 60vw;
+  height: 60vw;
+  background: #00f3ff;
+  /* Cyan from the image */
+  top: -20%;
+  left: -20%;
+  animation-duration: 25s;
+  opacity: 0.3;
+}
+
+/* Orb 2: Deep Tech Purple */
+.orb-2 {
+  width: 50vw;
+  height: 50vw;
+  background: #bd00ff;
+  /* Neon Purple */
+  bottom: -20%;
+  right: -20%;
+  animation-duration: 35s;
+  animation-delay: -5s;
+  opacity: 0.3;
+}
+
+/* The Floating Animation */
+@keyframes floatOrb {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, 50px) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* --- GLOBAL ANIMATIONS --- */
+
+/* 1. Slide In from Left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* 2. Slide In from Right */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* --- SCROLL TRIGGER UTILITIES --- */
+/* Elements start hidden before scrolling to them */
+.hidden-left {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: all 1s ease-out;
+  /* Smooth transition when class changes */
+}
+
+.hidden-right {
+  opacity: 0;
+  transform: translateX(100px);
+  transition: all 1s ease-out;
+}
+
+.hidden-top {
+  opacity: 0;
+  transform: translateY(-50px);
+  /* Starts gently from above */
+  transition: all 1s ease-out;
+}
+
+/* The class we add with React to trigger the slide */
+.show {
+  opacity: 1;
+  transform: translate(0, 0);
+  transition: all 1s ease-out;
+}

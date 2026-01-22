@@ -1,0 +1,149 @@
+.about {
+  /* Using the lighter purple to contrast with Hero's dark purple */
+  background-color: transparent;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: var(--text-light);
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.about-container {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  /* Vertically centers the content */
+  justify-content: space-between;
+  gap: 60px;
+}
+
+/* --- Left Side (Image) --- */
+.about-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.about-img {
+  width: 100%;
+  max-width: 450px;
+  position: relative;
+  z-index: 2;
+  border-radius: 20px;
+  /* Optional: smooths corners if image is square */
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Decorative Blob (Different color than Hero for variety) */
+.about-blob {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: var(--secondary);
+  /* Using secondary color here */
+  filter: blur(80px);
+  border-radius: 50%;
+  opacity: 0.3;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* --- Right Side (Text) --- */
+.about-content {
+  flex: 1;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--primary);
+  /* Highlighted title */
+  position: relative;
+  display: inline-block;
+}
+
+/* Underline effect for the title */
+.section-title::after {
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 4px;
+  background: var(--secondary);
+  bottom: -5px;
+  left: 0;
+  border-radius: 2px;
+}
+
+.about-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  color: #e0cfe6;
+  /* Slightly softer white/pink */
+}
+
+strong {
+  color: var(--secondary);
+}
+
+/* Stats Row (Optional flair) */
+.about-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  opacity: 0.8;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* --- Mobile Responsiveness --- */
+@media screen and (max-width: 768px) {
+  .about-container {
+    flex-direction: column;
+    /* Stacks vertically */
+    text-align: center;
+  }
+
+  .section-title::after {
+    left: 25%;
+    /* Centers underline on mobile */
+  }
+
+  .about-stats {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,149 @@
+.skills {
+  /* Keep it transparent/glassy so the ambient background shows through */
+  background-color: transparent;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  color: var(--text-light);
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  min-height: 80vh;
+}
+
+.skills-container {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+}
+
+/* --- Left Side: Content & Bars --- */
+.skills-content {
+  flex: 1;
+  max-width: 600px;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  color: var(--primary);
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 4px;
+  background: var(--secondary);
+  bottom: -5px;
+  left: 0;
+  border-radius: 2px;
+}
+
+.skill-item {
+  margin-bottom: 25px;
+}
+
+.skill-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-family: var(--font-main);
+}
+
+.skill-name {
+  font-size: 1.1rem;
+}
+
+.skill-percentage {
+  color: var(--secondary);
+}
+
+/* The Grey Background Bar */
+.skill-bar-bg {
+  width: 100%;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Subtle grey/purple slot */
+  border-radius: 10px;
+  overflow: hidden;
+  /* Ensures the fill doesn't spill out */
+}
+
+/* The Colored Fill Bar - THE ANIMATION IS HERE */
+.skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 10px;
+
+  /* Initial state: width is 0 */
+  width: 0;
+
+  /* Smoothly transition the width change over 1.5 seconds */
+  transition: width 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* When React adds the 'animate' class to the parent section,
+   change the fill width to the variable we set in the JSX style={{}} 
+*/
+.skills.animate .skill-bar-fill {
+  width: var(--target-width);
+}
+
+
+/* --- Right Side: Image --- */
+.skills-image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.skills-img {
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  z-index: 2;
+  animation: float 6s ease-in-out infinite;
+}
+
+.skills-blob {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: var(--primary);
+  /* Using primary color */
+  filter: blur(90px);
+  border-radius: 50%;
+  opacity: 0.2;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+/* --- Mobile Responsiveness --- */
+@media screen and (max-width: 768px) {
+  .skills-container {
+    flex-direction: column-reverse;
+    /* Image on top, skills below on mobile */
+    gap: 40px;
+  }
+
+  .skills-content {
+    width: 100%;
+  }
+
+  .skills-img {
+    max-width: 350px;
+  }
+}
