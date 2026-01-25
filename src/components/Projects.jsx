@@ -12,6 +12,7 @@ import airesume from '../assets/airesume.png';
 import facerecog from '../assets/facerecog.png';
 import dronemission from '../assets/dronemission.png';
 import portfolio from '../assets/portfolio.png';
+import jobtrack from '../assets/jobtrack.png';
 
 const Projects = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -37,6 +38,14 @@ const Projects = () => {
       image: proj2, // Using existing asset
       description: "A powerful mobile Github search tool featuring a glassmorphic UI, providing detailed profile analytics and repository tracking via the GitHub API.",
       link: "https://github.com/arooshazuha/GitSeekerApp",
+    },
+    {
+      id: 11,
+      title: "JobTrack",
+      category: "React Native",
+      image: jobtrack,
+      description: "A comprehensive job tracking application that allows users to add jobs, manage related notes, and update job statuses efficiently.",
+      link: "https://github.com/arooshazuha/JobTrack",
     },
 
     // WordPress
