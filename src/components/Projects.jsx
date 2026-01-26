@@ -10,6 +10,8 @@ import aqs from '../assets/aqs.png';
 import ggcc from '../assets/ggcc.png';
 import airesume from '../assets/airesume.png';
 import facerecog from '../assets/facerecog.png';
+import gitseeker from '../assets/gitseeker.png';
+import dailyglow from '../assets/dailyglow.png';
 import dronemission from '../assets/dronemission.png';
 import portfolio from '../assets/portfolio.png';
 import jobtrack from '../assets/jobtrack.png';
@@ -27,7 +29,7 @@ const Projects = () => {
       id: 1,
       title: "Daily Glow",
       category: "React Native",
-      image: proj1,
+      image: dailyglow,
       description: "A cross-platform mobile app for daily skincare routines and tracking. Built with React Native for smooth performance on iOS and Android.",
       link: "https://github.com/arooshazuha/DailyGlow",
     },
@@ -35,7 +37,7 @@ const Projects = () => {
       id: 2,
       title: "GitSeeker",
       category: "React Native",
-      image: proj2, // Using existing asset
+      image: gitseeker, // Using existing asset
       description: "A powerful mobile Github search tool featuring a glassmorphic UI, providing detailed profile analytics and repository tracking via the GitHub API.",
       link: "https://github.com/arooshazuha/GitSeekerApp",
     },
