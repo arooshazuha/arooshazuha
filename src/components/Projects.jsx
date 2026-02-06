@@ -57,6 +57,7 @@ const Projects = () => {
       category: "WordPress",
       image: florex,
       description: "A comprehensive e-commerce platform built from scratch for a pharmaceutical brand. Features seamless API payment integration and secure checkout flow.",
+      link: "https://florexpharma.com",
     },
     {
       id: 4,
@@ -64,6 +65,7 @@ const Projects = () => {
       category: "WordPress",
       image: aqs,
       description: "A complete digital brand overhaul for a global finance consulting firm. Delivered end-to-end execution including logo design and performance optimization.",
+      link: "https://aqsadvisory.com",
     },
     {
       id: 5,
@@ -71,6 +73,7 @@ const Projects = () => {
       category: "WordPress",
       image: ggcc,
       description: "A fully customized institutional portal featuring tailored dynamic sections and specific page layouts, optimized for high traffic and accessibility.",
+      link: "https://ggcmultan.edu.pk",
     },
 
     // AI/ML

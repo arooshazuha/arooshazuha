@@ -1,0 +1,194 @@
+.tech-stack {
+    min-height: auto;
+    padding: 80px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.tech-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.tech-container.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+/* Inherit shared styles or redefine if scoped */
+.section-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--primary);
+    display: inline-block;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 4px;
+    background: var(--secondary);
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.section-subtitle {
+    color: var(--text-light);
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+/* --- Tech Grid --- */
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.tech-category-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    /* Initial state for stagger animation controlled by React or general CSS animation */
+    animation: fadeUp 0.6s ease forwards;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tech-category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border-color: var(--secondary);
+}
+
+.category-title {
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+}
+
+.tools-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.tool-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 80px;
+    /* Fixed width for alignment */
+    text-align: center;
+}
+
+.icon-wrapper {
+    font-size: 2.5rem;
+    color: var(--text-light);
+    transition: transform 0.3s, color 0.3s;
+}
+
+.tool-item:hover .icon-wrapper {
+    transform: scale(1.1);
+    color: var(--secondary);
+}
+
+.tool-name {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Icon specific colors (optional) */
+.tech-icon.html {
+    color: #E34F26;
+}
+
+.tech-icon.css {
+    color: #1572B6;
+}
+
+.tech-icon.js {
+    color: #F7DF1E;
+}
+
+.tech-icon.react,
+.tech-icon.react-native {
+    color: #61DAFB;
+}
+
+.tech-icon.ts {
+    color: #3178C6;
+}
+
+.tech-icon.expo {
+    color: #fff;
+}
+
+.tech-icon.wp {
+    color: #21759B;
+}
+
+.tech-icon.woo {
+    color: #96588a;
+}
+
+.tech-icon.elementor {
+    color: #92003B;
+}
+
+.tech-icon.firebase {
+    color: #FFCA28;
+}
+
+.tech-icon.mongo {
+    color: #47A248;
+}
+
+.tech-icon.mysql {
+    color: #4479A1;
+}
+
+.tech-icon.git {
+    color: #F05032;
+}
+
+.tech-icon.github {
+    color: #fff;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .tech-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tool-item {
+        width: calc(33% - 10px);
+        /* 3 items per row on mobile for better density */
+    }
+}
