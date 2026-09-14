@@ -2,13 +2,45 @@ import React, { useEffect, useState, useRef } from 'react';
 import './TechStack.css';
 import {
     FaRobot, FaBrain, FaCogs, FaCalendarAlt, FaDatabase, FaStripe,
-    FaGoogleDrive, FaExchangeAlt, FaReact, FaGithub,
+    FaGoogleDrive, FaExchangeAlt, FaReact,
     FaKey, FaFileContract, FaSearch, FaProjectDiagram, FaBolt
 } from 'react-icons/fa';
 import {
     SiTypescript, SiJavascript, SiNextdotjs, SiNodedotjs,
     SiPostgresql, SiSupabase, SiOpenai, SiN8N
 } from 'react-icons/si';
+import { useTilt } from '../hooks/useTilt';
+
+// Category Card with 3D Tilt & Specular Reflection
+const TechCategoryCard = ({ category, index }) => {
+    const { ref, onMouseMove, onMouseLeave } = useTilt({ maxTilt: 5, perspective: 1000, scale: 1.02 });
+
+    return (
+        <div
+            ref={ref}
+            onMouseMove={onMouseMove}
+            onMouseLeave={onMouseLeave}
+            className="tech-category-card"
+            style={{ animationDelay: `${index * 0.12}s` }}
+        >
+            <div className="card-glare" />
+            <h3 className="category-title">
+                <span>{category.title}</span>
+                {category.title === "AI & Automation" && <span className="ai-active-pulse" />}
+            </h3>
+            <div className="tools-list">
+                {category.tools.map((tool, idx) => (
+                    <div key={idx} className="tool-item">
+                        <div className="icon-wrapper">
+                            {tool.icon}
+                        </div>
+                        <span className="tool-name">{tool.name}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
 
 const TechStack = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -91,23 +123,11 @@ const TechStack = () => {
 
                 <div className="tech-grid">
                     {techCategories.map((category, index) => (
-                        <div
-                            key={index}
-                            className="tech-category-card"
-                            style={{ animationDelay: `${index * 0.1}s` }}
-                        >
-                            <h3 className="category-title">{category.title}</h3>
-                            <div className="tools-list">
-                                {category.tools.map((tool, idx) => (
-                                    <div key={idx} className="tool-item">
-                                        <div className="icon-wrapper">
-                                            {tool.icon}
-                                        </div>
-                                        <span className="tool-name">{tool.name}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
+                        <TechCategoryCard 
+                            key={index} 
+                            category={category} 
+                            index={index} 
+                        />
                     ))}
                 </div>
 

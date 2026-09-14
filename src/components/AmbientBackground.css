@@ -1,0 +1,44 @@
+/* Ambient Background Styles */
+.ambient-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.75;
+}
+
+.orbs-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+/* Third subtle middle orb */
+.orb-3 {
+  width: 40vw;
+  height: 40vw;
+  background: #7b337e;
+  top: 40%;
+  left: 30%;
+  animation: floatOrb 28s infinite alternate ease-in-out;
+  animation-delay: -10s;
+  opacity: 0.2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-canvas {
+    display: none;
+  }
+  .orbs-wrapper {
+    transition: none;
+  }
+}

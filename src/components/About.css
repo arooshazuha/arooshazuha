@@ -1,13 +1,14 @@
 .about {
-  /* Using the lighter purple to contrast with Hero's dark purple */
   background-color: transparent;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   color: var(--text-light);
-  padding: 80px 20px;
+  padding: 90px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .about-container {
@@ -15,7 +16,6 @@
   width: 100%;
   display: flex;
   align-items: center;
-  /* Vertically centers the content */
   justify-content: space-between;
   gap: 60px;
 }
@@ -26,6 +26,7 @@
   display: flex;
   justify-content: center;
   position: relative;
+  perspective: 1200px;
 }
 
 .about-img {
@@ -34,20 +35,19 @@
   position: relative;
   z-index: 2;
   border-radius: 20px;
-  /* Optional: smooths corners if image is square */
-  animation: float 6s ease-in-out infinite;
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4));
+  animation: floatAbout 6s ease-in-out infinite;
 }
 
-/* Decorative Blob (Different color than Hero for variety) */
+/* Decorative Blob */
 .about-blob {
   position: absolute;
-  width: 350px;
-  height: 350px;
-  background: var(--secondary);
-  /* Using secondary color here */
-  filter: blur(80px);
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, var(--secondary) 0%, rgba(123, 51, 126, 0.2) 70%, transparent 100%);
+  filter: blur(85px);
   border-radius: 50%;
-  opacity: 0.3;
+  opacity: 0.35;
   z-index: 1;
   top: 50%;
   left: 50%;
@@ -56,23 +56,25 @@
 
 /* --- Right Side (Text) --- */
 .about-content {
-  flex: 1;
+  flex: 1.1;
+}
+
+.about-header-wrap {
+  margin-bottom: 25px;
 }
 
 .section-title {
   font-size: 2.5rem;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: var(--primary);
-  /* Highlighted title */
   position: relative;
   display: inline-block;
 }
 
-/* Underline effect for the title */
 .section-title::after {
   content: "";
   position: absolute;
-  width: 50%;
+  width: 60px;
   height: 4px;
   background: var(--secondary);
   bottom: -5px;
@@ -81,50 +83,81 @@
 }
 
 .about-description {
-  font-size: 1.1rem;
+  font-size: 1.08rem;
   line-height: 1.8;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   color: #e0cfe6;
-  /* Slightly softer white/pink */
 }
 
-strong {
-  color: var(--secondary);
+.interactive-keyword {
+  color: #ffffff;
+  font-weight: 600;
+  padding: 1px 4px;
+  border-radius: 4px;
+  transition: all 0.25s ease;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1.5px solid rgba(0, 243, 255, 0.4);
 }
 
-/* Stats Row (Optional flair) */
-.about-stats {
-  display: flex;
-  gap: 40px;
+.interactive-keyword:hover {
+  background: rgba(0, 243, 255, 0.15);
+  color: #00f3ff;
+  border-bottom-color: #00f3ff;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+}
+
+/* Core Pillars Row */
+.about-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
   margin-top: 30px;
 }
 
-.stat-item {
+.pillar-item {
+  background: rgba(66, 13, 75, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 14px 16px;
+  border-radius: 12px;
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(8px);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.stat-number {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--primary);
+.pillar-item:hover {
+  transform: translateY(-4px);
+  border-color: #00f3ff;
+  box-shadow: 0 8px 20px rgba(0, 243, 255, 0.2);
 }
 
-.stat-label {
-  font-size: 0.9rem;
-  color: var(--text-light);
-  opacity: 0.8;
+.pillar-icon {
+  font-size: 1.4rem;
+  color: #00f3ff;
+  flex-shrink: 0;
 }
 
-@keyframes float {
+.pillar-title {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.pillar-sub {
+  display: block;
+  font-size: 0.74rem;
+  color: #d1c1d6;
+}
+
+@keyframes floatAbout {
   0% {
     transform: translateY(0px);
   }
-
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-12px);
   }
-
   100% {
     transform: translateY(0px);
   }
@@ -134,16 +167,20 @@ strong {
 @media screen and (max-width: 768px) {
   .about-container {
     flex-direction: column;
-    /* Stacks vertically */
     text-align: center;
   }
 
   .section-title::after {
-    left: 25%;
-    /* Centers underline on mobile */
+    left: 50%;
+    transform: translateX(-50%);
   }
 
-  .about-stats {
-    justify-content: center;
+  .about-pillars {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .pillar-item {
+    text-align: left;
   }
 }

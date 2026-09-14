@@ -1,0 +1,45 @@
+/* Scroll Progress Styles */
+.scroll-progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 3.5px;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 10000;
+  pointer-events: none;
+}
+
+.scroll-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #7b337e, #6667ab, #00f3ff, #ff00ff);
+  background-size: 300% 100%;
+  animation: gradientShift 4s ease infinite;
+  position: relative;
+  border-radius: 0 2px 2px 0;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.6), 0 0 20px rgba(189, 0, 255, 0.4);
+  transition: width 0.1s linear;
+}
+
+.scroll-progress-glow {
+  position: absolute;
+  top: -3px;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #00f3ff;
+  box-shadow: 0 0 12px #00f3ff, 0 0 24px #00f3ff;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress-bar {
+    animation: none;
+  }
+}

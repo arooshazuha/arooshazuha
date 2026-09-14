@@ -1,6 +1,65 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Experience.css';
-import { FaBriefcase, FaCalendarAlt, FaCode, FaRobot, FaCheckCircle } from 'react-icons/fa';
+import { FaBriefcase, FaCalendarAlt, FaCheckCircle } from 'react-icons/fa';
+import { useTilt } from '../hooks/useTilt';
+
+// Experience Card with 3D Tilt & Specular Light Reflection
+const ExperienceCard = ({ exp, index, isVisible }) => {
+  const { ref, onMouseMove, onMouseLeave } = useTilt({ maxTilt: 4, perspective: 1200, scale: 1.01 });
+
+  return (
+    <div 
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      className={`experience-card ${isVisible ? 'show' : 'hidden-left'}`}
+      style={{ transitionDelay: `${index * 0.2}s` }}
+    >
+      <div className="card-glare" />
+
+      <div className="card-top">
+        <div className="company-info">
+          <div className="company-icon-box">
+            <FaBriefcase className="company-icon" />
+          </div>
+          <div>
+            <h3 className="company-name">{exp.company}</h3>
+            <h4 className="role-title">{exp.role}</h4>
+          </div>
+        </div>
+        <div className="meta-info">
+          <span className={`status-pill ${exp.badgeClass}`}>
+            {exp.badgeClass === 'badge-current' && <span className="current-live-pulse" />}
+            {exp.type}
+          </span>
+          <span className="period">
+            <FaCalendarAlt className="cal-icon" /> {exp.period}
+          </span>
+        </div>
+      </div>
+
+      <p className="exp-description">{exp.description}</p>
+
+      <div className="highlights-section">
+        <h5>Key Contributions & Responsibilities:</h5>
+        <ul className="highlights-list">
+          {exp.highlights.map((item, idx) => (
+            <li key={idx} className="highlight-item">
+              <FaCheckCircle className="check-bullet" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="exp-tech-tags">
+        {exp.tech.map((t, idx) => (
+          <span key={idx} className="tech-badge">{t}</span>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 const Experience = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -70,52 +129,16 @@ const Experience = () => {
           <p className="section-subtitle">My Professional Journey</p>
         </div>
 
-        {/* Timeline / Cards */}
+        {/* Timeline Track & Cards */}
         <div className="experience-timeline">
+          <div className="timeline-connector-bar" />
           {experiences.map((exp, index) => (
-            <div 
-              key={index}
-              className={`experience-card ${isVisible ? 'show' : 'hidden-left'}`}
-              style={{ transitionDelay: `${index * 0.25}s` }}
-            >
-              <div className="card-top">
-                <div className="company-info">
-                  <div className="company-icon-box">
-                    <FaBriefcase className="company-icon" />
-                  </div>
-                  <div>
-                    <h3 className="company-name">{exp.company}</h3>
-                    <h4 className="role-title">{exp.role}</h4>
-                  </div>
-                </div>
-                <div className="meta-info">
-                  <span className={`status-pill ${exp.badgeClass}`}>{exp.type}</span>
-                  <span className="period">
-                    <FaCalendarAlt className="cal-icon" /> {exp.period}
-                  </span>
-                </div>
-              </div>
-
-              <p className="exp-description">{exp.description}</p>
-
-              <div className="highlights-section">
-                <h5>Key Contributions & Responsibilities:</h5>
-                <ul className="highlights-list">
-                  {exp.highlights.map((item, idx) => (
-                    <li key={idx} className="highlight-item">
-                      <FaCheckCircle className="check-bullet" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="exp-tech-tags">
-                {exp.tech.map((t, idx) => (
-                  <span key={idx} className="tech-badge">{t}</span>
-                ))}
-              </div>
-            </div>
+            <ExperienceCard 
+              key={index} 
+              exp={exp} 
+              index={index} 
+              isVisible={isVisible} 
+            />
           ))}
         </div>
 

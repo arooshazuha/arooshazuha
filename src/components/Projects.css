@@ -1,7 +1,7 @@
 .projects {
   background-color: transparent;
   color: var(--text-light);
-  padding: 80px 20px;
+  padding: 90px 20px;
   position: relative;
   z-index: 1;
 }
@@ -14,7 +14,7 @@
 
 .projects-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 45px;
 }
 
 .projects-header .section-title {
@@ -49,11 +49,11 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 45px;
+  margin-bottom: 50px;
 }
 
 .tab-btn {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: var(--text-light);
   padding: 10px 22px;
@@ -63,20 +63,22 @@
   font-size: 0.95rem;
   font-weight: 500;
   backdrop-filter: blur(8px);
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .tab-btn:hover {
   background: rgba(255, 255, 255, 0.15);
   border-color: var(--secondary);
   transform: translateY(-2px);
+  color: #ffffff;
 }
 
 .tab-btn.active {
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   border-color: #00f3ff;
   color: #fff;
-  box-shadow: 0 4px 15px rgba(0, 243, 255, 0.25);
+  box-shadow: 0 4px 18px rgba(0, 243, 255, 0.3);
+  transform: translateY(-2px);
 }
 
 /* --- GRID SETUP --- */
@@ -94,15 +96,35 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(12px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  will-change: transform;
 }
 
 .project-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
-  border-color: var(--secondary);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 243, 255, 0.15);
+  border-color: rgba(0, 243, 255, 0.4);
+}
+
+/* Dynamic Radial Specular Glare */
+.project-card .card-glare {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: 20px;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+    rgba(0, 243, 255, 0.1),
+    transparent 80%
+  );
+  z-index: 5;
 }
 
 /* --- CARD IMAGE BANNER --- */
@@ -118,11 +140,11 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .project-card:hover .card-image img {
-  transform: scale(1.08);
+  transform: scale(1.07);
 }
 
 .card-image-overlay {
@@ -131,7 +153,12 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(180deg, rgba(33, 6, 53, 0.2) 0%, rgba(33, 6, 53, 0.75) 100%);
+  background: linear-gradient(180deg, rgba(33, 6, 53, 0.2) 0%, rgba(33, 6, 53, 0.8) 100%);
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover .card-image-overlay {
+  opacity: 0.65;
 }
 
 .card-category-pill {
@@ -140,14 +167,47 @@
   left: 14px;
   background: rgba(66, 13, 75, 0.85);
   border: 1px solid rgba(255, 255, 255, 0.2);
-  color: var(--text-light);
+  color: #ffffff;
   padding: 4px 12px;
   border-radius: 16px;
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(8px);
+  z-index: 2;
+}
+
+/* Architecture Micro Ribbon */
+.project-architecture-ribbon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(33, 6, 53, 0.88);
+  border: 1px solid rgba(0, 243, 255, 0.35);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #00f3ff;
+  backdrop-filter: blur(8px);
+  z-index: 2;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.project-card:hover .project-architecture-ribbon {
+  transform: translateY(-2px);
+  border-color: #00f3ff;
+  box-shadow: 0 4px 16px rgba(0, 243, 255, 0.3);
+}
+
+.ribbon-arrow {
+  font-size: 0.55rem;
+  color: #ff00ff;
 }
 
 /* --- CARD CONTENT --- */
@@ -156,6 +216,8 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 2;
 }
 
 .project-title {
@@ -169,17 +231,17 @@
 .project-tagline {
   font-size: 0.92rem;
   color: #d1c1d6;
-  line-height: 1.5;
+  line-height: 1.55;
   margin-bottom: 16px;
 }
 
 /* Highlights List */
 .project-highlights {
-  background: rgba(0, 0, 0, 0.18);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   padding: 14px 16px;
   margin-bottom: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .highlights-title {
@@ -205,6 +267,12 @@
   font-size: 0.84rem;
   color: #e5d8ea;
   line-height: 1.45;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.project-bullet-item:hover {
+  transform: translateX(3px);
+  color: #ffffff;
 }
 
 .bullet-icon {
@@ -232,6 +300,14 @@
   border-radius: 14px;
   font-size: 0.76rem;
   font-weight: 500;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.project-tech-tag:hover {
+  background: rgba(123, 51, 126, 0.4);
+  border-color: #00f3ff;
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
 /* Action Bar */
@@ -239,32 +315,38 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 12px;
+  padding-top: 14px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .card-btn.link-active {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
-  background: transparent;
+  gap: 8px;
+  padding: 8px 18px;
+  background: rgba(0, 243, 255, 0.08);
   border: 1px solid #00f3ff;
   color: #00f3ff;
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   text-decoration: none;
+}
+
+.btn-icon {
+  font-size: 0.75rem;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .card-btn.link-active:hover {
   background: #00f3ff;
   color: #210635;
+  box-shadow: 0 4px 18px rgba(0, 243, 255, 0.5);
 }
 
-.btn-icon {
-  font-size: 0.75rem;
+.card-btn.link-active:hover .btn-icon {
+  transform: translate(2px, -2px);
 }
 
 .card-badge-status {

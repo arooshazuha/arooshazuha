@@ -12,6 +12,10 @@
   --font-main: "Outfit", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -19,6 +23,11 @@ body {
   background-color: var(--bg-dark);
   color: var(--text-light);
   font-family: var(--font-main);
+  overflow-x: hidden;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
 }
 
 a {
@@ -32,9 +41,15 @@ ul {
   margin: 0;
 }
 
+/* Accessibility Focus States */
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid #00f3ff;
+  outline-offset: 3px;
+}
+
 /* Scrollbar for Chrome, Edge, Safari */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 9px;
 }
 
 ::-webkit-scrollbar-track {
@@ -42,12 +57,13 @@ ul {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--secondary);
-  border-radius: 5px;
+  background: rgba(102, 103, 171, 0.6);
+  border-radius: 6px;
+  border: 2px solid var(--bg-dark);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+  background: #00f3ff;
 }
 
 /* Container for the background effects */
@@ -60,14 +76,13 @@ ul {
   z-index: -1;
   overflow: hidden;
   background-color: var(--bg-dark);
-  /* Tech Background Image */
   background-image: url("./assets/tech-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
-/* Overlay to ensure text readability */
+/* Overlay to ensure high contrast and text readability */
 .background-container::after {
   content: "";
   position: absolute;
@@ -75,10 +90,9 @@ ul {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(33, 6, 53, 0.85);
-  /* Dark purple tint override */
-  backdrop-filter: blur(3px);
-  /* Subtle blur to soften the busy circuit lines */
+  background: rgba(33, 6, 53, 0.88);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 /* Common style for the glowing orbs */
@@ -86,23 +100,20 @@ ul {
   position: absolute;
   border-radius: 50%;
   filter: blur(100px);
-  /* Increased blur for smoother ambiance */
-  opacity: 0.5;
-  animation: floatOrb 20s infinite alternate ease-in-out;
+  opacity: 0.45;
+  animation: floatOrb 22s infinite alternate ease-in-out;
   z-index: 1;
-  /* Above the image overlay */
 }
 
 /* Orb 1: Cyan/Tech Blue */
 .orb-1 {
-  width: 60vw;
-  height: 60vw;
+  width: 55vw;
+  height: 55vw;
   background: #00f3ff;
-  /* Cyan from the image */
-  top: -20%;
-  left: -20%;
+  top: -15%;
+  left: -15%;
   animation-duration: 25s;
-  opacity: 0.3;
+  opacity: 0.25;
 }
 
 /* Orb 2: Deep Tech Purple */
@@ -110,12 +121,11 @@ ul {
   width: 50vw;
   height: 50vw;
   background: #bd00ff;
-  /* Neon Purple */
-  bottom: -20%;
-  right: -20%;
-  animation-duration: 35s;
+  bottom: -15%;
+  right: -15%;
+  animation-duration: 32s;
   animation-delay: -5s;
-  opacity: 0.3;
+  opacity: 0.25;
 }
 
 /* The Floating Animation */
@@ -125,11 +135,11 @@ ul {
   }
 
   33% {
-    transform: translate(30px, 50px) scale(1.1);
+    transform: translate(30px, 50px) scale(1.08);
   }
 
   66% {
-    transform: translate(-20px, 20px) scale(0.9);
+    transform: translate(-20px, 20px) scale(0.92);
   }
 
   100% {
@@ -137,59 +147,50 @@ ul {
   }
 }
 
-/* --- GLOBAL ANIMATIONS --- */
-
-/* 1. Slide In from Left */
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-100px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* 2. Slide In from Right */
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(100px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 /* --- SCROLL TRIGGER UTILITIES --- */
-/* Elements start hidden before scrolling to them */
 .hidden-left {
   opacity: 0;
-  transform: translateX(-100px);
-  transition: all 1s ease-out;
-  /* Smooth transition when class changes */
+  transform: translateX(-50px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .hidden-right {
   opacity: 0;
-  transform: translateX(100px);
-  transition: all 1s ease-out;
+  transform: translateX(50px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .hidden-top {
   opacity: 0;
-  transform: translateY(-50px);
-  /* Starts gently from above */
-  transition: all 1s ease-out;
+  transform: translateY(-35px);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* The class we add with React to trigger the slide */
 .show {
   opacity: 1;
   transform: translate(0, 0);
-  transition: all 1s ease-out;
+  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* --- ACCESSIBILITY: PREFERS REDUCED MOTION --- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hidden-left, .hidden-right, .hidden-top {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .glow-orb {
+    animation: none !important;
+  }
+
+  .hero-img, .about-img, .skills-img, .contact-img {
+    animation: none !important;
+  }
 }

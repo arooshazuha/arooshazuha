@@ -1,34 +1,51 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useTilt } from '../hooks/useTilt';
 import './Skills.css';
-import skillsImage from '../assets/skills-img.png'; // Import your new image
+import skillsImage from '../assets/skills-img.png';
+
+const SKILLS_DATA = [
+  { name: 'AI Automation & n8n Workflows', target: 95, level: '95%' },
+  { name: 'Full Stack Development (React / Next.js / Node)', target: 95, level: '95%' },
+  { name: 'CRM & Business Workflows (GoHighLevel)', target: 92, level: '92%' },
+  { name: 'RAG & AI Agents (OpenAI, Supabase / pgvector)', target: 90, level: '90%' },
+  { name: 'API Integrations & Webhooks', target: 94, level: '94%' },
+];
 
 const Skills = () => {
-  // 1. The Data: Define your skills and percentages here
-  const skillsData = [
-    { name: 'AI Automation & n8n Workflows', level: '95%' },
-    { name: 'Full Stack Development (React / Next.js / Node)', level: '95%' },
-    { name: 'CRM & Business Workflows (GoHighLevel)', level: '92%' },
-    { name: 'RAG & AI Agents (OpenAI, Supabase / pgvector)', level: '90%' },
-    { name: 'API Integrations & Webhooks', level: '94%' },
-  ];
-
-  // 2. The State: Tracks if the section is visible on screen
   const [isVisible, setIsVisible] = useState(false);
-  // The Ref: A reference to the actual HTML element so we can watch it
+  const [counts, setCounts] = useState(SKILLS_DATA.map(() => 0));
   const sectionRef = useRef(null);
+  const { ref: imageTiltRef, onMouseMove: onImageTiltMove, onMouseLeave: onImageTiltLeave } = useTilt({ maxTilt: 6, perspective: 1200, scale: 1.02 });
 
-  // 3. The Logic: Scroll Detection
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
-        // If the section enters the viewport, set visible to true
         if (entry.isIntersecting) {
           setIsVisible(true);
-          observer.disconnect(); // Stop watching once triggered (animates only once)
+          observer.disconnect();
+
+          // Count-up animation
+          const duration = 1500;
+          const startTime = performance.now();
+
+          const updateCounts = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic
+            const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+
+            setCounts(SKILLS_DATA.map(skill => Math.round(skill.target * easeOutProgress)));
+
+            if (progress < 1) {
+              requestAnimationFrame(updateCounts);
+            }
+          };
+
+          requestAnimationFrame(updateCounts);
         }
       },
-      { threshold: 0.1 } // Trigger when 10% visible
+      { threshold: 0.15 }
     );
 
     const el = sectionRef.current;
@@ -36,39 +53,37 @@ const Skills = () => {
       observer.observe(el);
     }
 
-    // Cleanup function
     return () => {
       if (el) observer.unobserve(el);
     };
   }, []);
 
-
   return (
-    // We add the 'animate' class only when isVisible is true
     <section id="skills" className={`skills ${isVisible ? 'animate' : ''}`} ref={sectionRef}>
       <div className="skills-container">
 
-        {/* LEFT SIDE: Text/Bars slides in from LEFT */}
+        {/* LEFT SIDE: Text/Bars with Animated Count-Up */}
         <div className={`skills-content ${isVisible ? 'show' : 'hidden-left'}`}>
           <h2 className="section-title">My Skills</h2>
 
           <div className="skills-list">
-            {skillsData.map((skill, index) => (
+            {SKILLS_DATA.map((skill, index) => (
               <div key={index} className="skill-item">
 
-                {/* Skill Info (Name and Percentage text) */}
+                {/* Skill Info (Name and Animated Percentage text) */}
                 <div className="skill-info">
                   <span className="skill-name">{skill.name}</span>
-                  <span className="skill-percentage">{skill.level}</span>
+                  <span className="skill-percentage">{counts[index]}%</span>
                 </div>
 
-                {/* The Bar itself */}
+                {/* The Bar with glowing head */}
                 <div className="skill-bar-bg">
-                  {/* We pass the target width as a CSS variable */}
                   <div
                     className="skill-bar-fill"
                     style={{ '--target-width': skill.level }}
-                  ></div>
+                  >
+                    <div className="skill-bar-head-glow" />
+                  </div>
                 </div>
 
               </div>
@@ -76,8 +91,13 @@ const Skills = () => {
           </div>
         </div>
 
-        {/* Right Side: Illustration */}
-        <div className={`skills-image-container ${isVisible ? 'show' : 'hidden-right'}`}>
+        {/* Right Side: Interactive Illustration with Depth */}
+        <div 
+          ref={imageTiltRef}
+          onMouseMove={onImageTiltMove}
+          onMouseLeave={onImageTiltLeave}
+          className={`skills-image-container ${isVisible ? 'show' : 'hidden-right'}`}
+        >
           <img src={skillsImage} alt="Skills Illustration" className="skills-img" />
           <div className="skills-blob"></div>
         </div>

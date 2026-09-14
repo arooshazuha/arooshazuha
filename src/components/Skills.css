@@ -1,10 +1,9 @@
 .skills {
-  /* Keep it transparent/glassy so the ambient background shows through */
   background-color: transparent;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   color: var(--text-light);
-  padding: 80px 20px;
+  padding: 90px 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -49,55 +48,79 @@
 
 .skill-item {
   margin-bottom: 25px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+
+.skill-item:hover {
+  background: rgba(66, 13, 75, 0.45);
+  border-color: rgba(0, 243, 255, 0.3);
+  transform: translateX(6px);
 }
 
 .skill-info {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
-  font-weight: 500;
+  margin-bottom: 10px;
+  font-weight: 600;
   font-family: var(--font-main);
 }
 
 .skill-name {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
+  color: #ffffff;
 }
 
 .skill-percentage {
-  color: var(--secondary);
+  color: #00f3ff;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
 }
 
 /* The Grey Background Bar */
 .skill-bar-bg {
   width: 100%;
   height: 10px;
-  background-color: rgba(255, 255, 255, 0.1);
-  /* Subtle grey/purple slot */
+  background-color: rgba(255, 255, 255, 0.08);
   border-radius: 10px;
-  overflow: hidden;
-  /* Ensures the fill doesn't spill out */
+  overflow: visible;
+  position: relative;
 }
 
-/* The Colored Fill Bar - THE ANIMATION IS HERE */
+/* The Colored Fill Bar */
 .skill-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  background: linear-gradient(90deg, var(--primary), var(--secondary), #00f3ff);
   border-radius: 10px;
-
-  /* Initial state: width is 0 */
   width: 0;
-
-  /* Smoothly transition the width change over 1.5 seconds */
+  position: relative;
   transition: width 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  box-shadow: 0 0 12px rgba(0, 243, 255, 0.35);
 }
 
-/* When React adds the 'animate' class to the parent section,
-   change the fill width to the variable we set in the JSX style={{}} 
-*/
 .skills.animate .skill-bar-fill {
   width: var(--target-width);
 }
 
+.skill-bar-head-glow {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #00f3ff;
+  box-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
+  opacity: 0;
+  transition: opacity 0.5s ease 1s;
+}
+
+.skills.animate .skill-bar-head-glow {
+  opacity: 1;
+}
 
 /* --- Right Side: Image --- */
 .skills-image-container {
@@ -105,6 +128,7 @@
   display: flex;
   justify-content: center;
   position: relative;
+  perspective: 1200px;
 }
 
 .skills-img {
@@ -112,31 +136,42 @@
   max-width: 500px;
   position: relative;
   z-index: 2;
-  animation: float 6s ease-in-out infinite;
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.4));
+  animation: floatSkills 6s ease-in-out infinite;
 }
 
 .skills-blob {
   position: absolute;
-  width: 400px;
-  height: 400px;
-  background: var(--primary);
-  /* Using primary color */
-  filter: blur(90px);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, var(--primary) 0%, rgba(102, 103, 171, 0.2) 70%, transparent 100%);
+  filter: blur(95px);
   border-radius: 50%;
-  opacity: 0.2;
+  opacity: 0.3;
   z-index: 1;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
+@keyframes floatSkills {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
 
 /* --- Mobile Responsiveness --- */
 @media screen and (max-width: 768px) {
   .skills-container {
     flex-direction: column-reverse;
-    /* Image on top, skills below on mobile */
     gap: 40px;
+    text-align: center;
   }
 
   .skills-content {
@@ -144,6 +179,15 @@
   }
 
   .skills-img {
-    max-width: 350px;
+    max-width: 340px;
+  }
+
+  .section-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .skill-item:hover {
+    transform: none;
   }
 }

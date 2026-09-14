@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Projects.css';
-import { FaCheckCircle, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaCheckCircle, FaExternalLinkAlt, FaArrowRight } from 'react-icons/fa';
+import { useTilt } from '../hooks/useTilt';
 
 import topfuncharters from '../assets/topfuncharters.png';
 import adaptai from '../assets/adaptai.png';
@@ -12,6 +13,106 @@ import florex from '../assets/florex.png';
 import aqs from '../assets/aqs.png';
 import ggcc from '../assets/ggcc.png';
 import dronemission from '../assets/dronemission.png';
+
+// Individual Project Card with 3D Tilt & Specular Light
+const ProjectCard = ({ project, index, isVisible }) => {
+  const { ref, onMouseMove, onMouseLeave } = useTilt({ maxTilt: 4, perspective: 1100, scale: 1.015 });
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      className={`project-card ${isVisible ? 'show' : 'hidden-top'}`}
+      style={{ transitionDelay: `${(index % 3) * 0.12}s` }}
+    >
+      <div className="card-glare" />
+
+      {/* Card Image Banner */}
+      <div className="card-image">
+        <img src={project.image} alt={project.title} loading="lazy" />
+        <div className="card-image-overlay"></div>
+        <span className="card-category-pill">{project.category}</span>
+
+        {/* Dynamic Project Flow Mini Indicator for AI & SaaS architectures */}
+        {project.id === 1 && (
+          <div className="project-architecture-ribbon">
+            <span>Website</span>
+            <FaArrowRight className="ribbon-arrow" />
+            <span>Chatbot</span>
+            <FaArrowRight className="ribbon-arrow" />
+            <span>GHL CRM</span>
+            <FaArrowRight className="ribbon-arrow" />
+            <span>Booking</span>
+          </div>
+        )}
+        {project.id === 2 && (
+          <div className="project-architecture-ribbon">
+            <span>5 n8n Agents</span>
+            <FaArrowRight className="ribbon-arrow" />
+            <span>Calendar API</span>
+            <FaArrowRight className="ribbon-arrow" />
+            <span>Logic</span>
+          </div>
+        )}
+        {project.id === 3 && (
+          <div className="project-architecture-ribbon">
+            <span>Drive</span>
+            <FaArrowRight className="ribbon-arrow" />
+            <span>n8n RAG</span>
+            <FaArrowRight className="ribbon-arrow" />
+            <span>pgvector</span>
+          </div>
+        )}
+      </div>
+
+      {/* Card Body */}
+      <div className="card-content">
+        <h3 className="project-title">{project.title}</h3>
+        <p className="project-tagline">{project.tagline}</p>
+
+        {/* "What I Worked On" Highlights */}
+        <div className="project-highlights">
+          <span className="highlights-title">What I Built & Engineered:</span>
+          <ul className="project-bullet-list">
+            {project.workedOn.map((item, idx) => (
+              <li key={idx} className="project-bullet-item">
+                <FaCheckCircle className="bullet-icon" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Tech Stack Badges */}
+        <div className="project-tech-badges">
+          {project.tech.map((t, idx) => (
+            <span key={idx} className="project-tech-tag">{t}</span>
+          ))}
+        </div>
+
+        {/* Footer Action */}
+        <div className="card-action-bar">
+          {project.link ? (
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card-btn link-active"
+            >
+              <span>{project.linkText}</span>
+              <FaExternalLinkAlt className="btn-icon" />
+            </a>
+          ) : (
+            <span className="card-badge-status">
+              {project.linkText}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Projects = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -226,62 +327,12 @@ const Projects = () => {
         {/* Projects Grid */}
         <div className="projects-grid">
           {filteredProjects.map((project, index) => (
-            <div
+            <ProjectCard
               key={project.id}
-              className={`project-card ${isVisible ? 'show' : 'hidden-top'}`}
-              style={{ transitionDelay: `${index * 0.15}s` }}
-            >
-              {/* Card Image Banner */}
-              <div className="card-image">
-                <img src={project.image} alt={project.title} />
-                <div className="card-image-overlay"></div>
-                <span className="card-category-pill">{project.category}</span>
-              </div>
-
-              {/* Card Body */}
-              <div className="card-content">
-                <h3 className="project-title">{project.title}</h3>
-                <p className="project-tagline">{project.tagline}</p>
-
-                {/* "What I Worked On" Highlights */}
-                <div className="project-highlights">
-                  <span className="highlights-title">What I Built & Engineered:</span>
-                  <ul className="project-bullet-list">
-                    {project.workedOn.map((item, idx) => (
-                      <li key={idx} className="project-bullet-item">
-                        <FaCheckCircle className="bullet-icon" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Tech Stack Badges */}
-                <div className="project-tech-badges">
-                  {project.tech.map((t, idx) => (
-                    <span key={idx} className="project-tech-tag">{t}</span>
-                  ))}
-                </div>
-
-                {/* Footer Action */}
-                <div className="card-action-bar">
-                  {project.link ? (
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="card-btn link-active"
-                    >
-                      {project.linkText} <FaExternalLinkAlt className="btn-icon" />
-                    </a>
-                  ) : (
-                    <span className="card-badge-status">
-                      {project.linkText}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
+              project={project}
+              index={index}
+              isVisible={isVisible}
+            />
           ))}
         </div>
 

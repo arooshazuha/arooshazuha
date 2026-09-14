@@ -3,7 +3,7 @@
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
   color: var(--text-light);
-  padding: 80px 20px;
+  padding: 90px 20px;
   position: relative;
   z-index: 1;
 }
@@ -16,7 +16,7 @@
 
 .experience-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 55px;
 }
 
 .experience-header .section-title {
@@ -43,22 +43,26 @@
   display: flex;
   flex-direction: column;
   gap: 35px;
+  position: relative;
 }
 
 .experience-card {
   background: rgba(66, 13, 75, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 35px 30px;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 22px;
+  padding: 38px 34px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  will-change: transform;
 }
 
 .experience-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-  border-color: var(--secondary);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 243, 255, 0.15);
+  border-color: rgba(0, 243, 255, 0.4);
 }
 
 .card-top {
@@ -67,33 +71,41 @@
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 15px;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding-bottom: 18px;
+  padding-bottom: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 .company-info {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
 }
 
 .company-icon-box {
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
   background: rgba(0, 243, 255, 0.1);
-  border: 1px solid rgba(0, 243, 255, 0.3);
+  border: 1px solid rgba(0, 243, 255, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #00f3ff;
   font-size: 1.4rem;
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+  box-shadow: 0 0 18px rgba(0, 243, 255, 0.25);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.experience-card:hover .company-icon-box {
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.5);
 }
 
 .company-name {
-  font-size: 1.6rem;
+  font-size: 1.65rem;
   color: #ffffff;
   margin: 0 0 4px 0;
   font-weight: 700;
@@ -104,27 +116,41 @@
   color: #00f3ff;
   margin: 0;
   font-weight: 600;
+  text-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
 }
 
 .meta-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .status-pill {
-  font-size: 0.8rem;
-  padding: 5px 12px;
+  font-size: 0.82rem;
+  padding: 6px 14px;
   border-radius: 20px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.current-live-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 8px #4ade80;
+  animation: pingDot 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 .badge-current {
   background: rgba(34, 197, 94, 0.15);
   color: #4ade80;
   border: 1px solid rgba(34, 197, 94, 0.4);
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
 }
 
 .badge-previous {
@@ -148,14 +174,18 @@
 }
 
 .exp-description {
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   color: #f5d5e0;
-  line-height: 1.7;
-  margin-bottom: 20px;
+  line-height: 1.75;
+  margin-bottom: 22px;
+  position: relative;
+  z-index: 2;
 }
 
 .highlights-section {
-  margin-bottom: 25px;
+  margin-bottom: 26px;
+  position: relative;
+  z-index: 2;
 }
 
 .highlights-section h5 {
@@ -163,37 +193,50 @@
   color: var(--secondary);
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .highlights-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .highlight-item {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  font-size: 0.95rem;
+  font-size: 0.96rem;
   color: #e0cfe6;
   line-height: 1.6;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.highlight-item:hover {
+  transform: translateX(4px);
+  color: #ffffff;
 }
 
 .check-bullet {
   color: #00f3ff;
-  font-size: 1rem;
-  margin-top: 4px;
+  font-size: 1.05rem;
+  margin-top: 3px;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.highlight-item:hover .check-bullet {
+  transform: scale(1.2);
 }
 
 .exp-tech-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  padding-top: 15px;
+  padding-top: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  z-index: 2;
 }
 
 .tech-badge {
@@ -204,13 +247,15 @@
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .tech-badge:hover {
-  background: rgba(123, 51, 126, 0.4);
+  background: rgba(123, 51, 126, 0.5);
   border-color: #00f3ff;
   color: #fff;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 243, 255, 0.3);
 }
 
 @media screen and (max-width: 768px) {
@@ -225,6 +270,6 @@
   }
 
   .experience-card {
-    padding: 25px 20px;
+    padding: 26px 20px;
   }
 }

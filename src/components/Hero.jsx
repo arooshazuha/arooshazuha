@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { FaArrowRight, FaPaperPlane, FaRobot, FaLayerGroup } from "react-icons/fa";
+import { useMagnetic } from "../hooks/useMagnetic";
+import { useTilt } from "../hooks/useTilt";
 import "./Hero.css";
-import heroImage from "../assets/hero-img.png"; // Make sure the path matches your file name!
+import heroImage from "../assets/hero-img.png";
 
 const ROLES = [
   "AI Automation Engineer",
@@ -14,6 +17,10 @@ const Hero = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
+
+  const { ref: primaryBtnRef, onMouseMove: onPrimaryMove, onMouseLeave: onPrimaryLeave } = useMagnetic(0.28);
+  const { ref: outlineBtnRef, onMouseMove: onOutlineMove, onMouseLeave: onOutlineLeave } = useMagnetic(0.28);
+  const { ref: imageTiltRef, onMouseMove: onImageTiltMove, onMouseLeave: onImageTiltLeave } = useTilt({ maxTilt: 6, perspective: 1200, scale: 1.02 });
 
   useEffect(() => {
     const handleTyping = () => {
@@ -46,36 +53,74 @@ const Hero = () => {
       <div className="hero-container">
         {/* Left Side: Text Content */}
         <div className="hero-content">
-          <div className="badge">Welcome to my Portfolio</div>
-          <h1>
+          <div className="badge">
+            <span className="badge-pulse-dot" />
+            <span>Welcome to my Portfolio</span>
+          </div>
+
+          <h1 className="hero-title">
             Hey, I'm <span className="highlight">Aroosha Zuha</span>
           </h1>
+
           <h2 className="typewriter">
             I am a <span className="role-text">{text}</span>
             <span className="cursor">|</span>
           </h2>
+
           <p className="hero-description">
             Building AI-powered business automations, intelligent agents, CRM workflows,
             API integrations, SaaS applications, and full-stack web/mobile products.
           </p>
+
           <div className="hero-buttons">
-            <a href="#projects" className="btn btn-primary">
-              My Work
+            <a 
+              ref={primaryBtnRef}
+              onMouseMove={onPrimaryMove}
+              onMouseLeave={onPrimaryLeave}
+              href="#projects" 
+              className="btn btn-primary magnetic-btn"
+            >
+              <span>My Work</span>
+              <FaArrowRight className="btn-inline-icon" />
             </a>
-            <a href="#contact" className="btn btn-outline">
-              Let's Connect
+            <a 
+              ref={outlineBtnRef}
+              onMouseMove={onOutlineMove}
+              onMouseLeave={onOutlineLeave}
+              href="#contact" 
+              className="btn btn-outline magnetic-btn"
+            >
+              <span>Let's Connect</span>
+              <FaPaperPlane className="btn-inline-icon" />
             </a>
           </div>
         </div>
 
-        {/* Right Side: Illustration */}
-        <div className="hero-image-container">
+        {/* Right Side: Interactive Illustration with Depth & Floating Chips */}
+        <div 
+          ref={imageTiltRef}
+          onMouseMove={onImageTiltMove}
+          onMouseLeave={onImageTiltLeave}
+          className="hero-image-container"
+        >
           <img
             src={heroImage}
             alt="Aroosha Zuha Illustration"
             className="hero-img"
           />
-          {/* Decorative background circle */}
+
+          {/* Interactive Floating Micro Chips */}
+          <div className="floating-chip chip-top-left">
+            <FaRobot className="chip-icon ai" />
+            <span>n8n & AI Agents</span>
+          </div>
+
+          <div className="floating-chip chip-bottom-right">
+            <FaLayerGroup className="chip-icon dev" />
+            <span>Full-Stack SaaS</span>
+          </div>
+
+          {/* Decorative background glow circle */}
           <div className="hero-blob"></div>
         </div>
       </div>

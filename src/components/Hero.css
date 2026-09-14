@@ -1,11 +1,10 @@
 .hero {
   background-color: transparent;
   min-height: 90vh;
-  /* Takes up most of the screen */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 50px 20px;
+  padding: 60px 20px;
   position: relative;
   overflow: hidden;
 }
@@ -18,43 +17,85 @@
   justify-content: space-between;
   gap: 50px;
   flex-wrap: wrap-reverse;
-  /* Stacks correctly on mobile */
 }
 
 /* --- Left Side Content --- */
 .hero-content {
   flex: 1;
   max-width: 600px;
-  animation: slideInLeft 1s ease-out forwards;
+  animation: heroFadeSlideIn 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes heroFadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .badge {
-  display: inline-block;
-  background: rgba(0, 243, 255, 0.1);
-  /* Subtle Cyan Glass */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 243, 255, 0.08);
   color: #00f3ff;
-  /* Bright Cyan Text */
-  padding: 8px 16px;
+  padding: 8px 18px;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 20px;
-  border: 1px solid rgba(0, 243, 255, 0.5);
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-  /* Tech Glow */
-  backdrop-filter: blur(5px);
+  margin-bottom: 24px;
+  border: 1px solid rgba(0, 243, 255, 0.4);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.25);
+  backdrop-filter: blur(8px);
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-h1 {
+.badge:hover {
+  transform: translateY(-2px);
+  border-color: #00f3ff;
+}
+
+.badge-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #00f3ff;
+  box-shadow: 0 0 8px #00f3ff;
+  position: relative;
+}
+
+.badge-pulse-dot::after {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid #00f3ff;
+  animation: pingDot 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pingDot {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
+.hero-title {
   font-size: 3.5rem;
-  margin-bottom: 10px;
-  line-height: 1.1;
+  margin-bottom: 12px;
+  line-height: 1.15;
   color: var(--text-light);
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .highlight {
   background: linear-gradient(90deg, #00f3ff, #ff00ff);
-  /* Cyan to Bright Magenta */
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -64,22 +105,23 @@ h1 {
 h2.typewriter {
   font-size: 2rem;
   color: #ffffff;
-  /* Pure white for maximum contrast */
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   min-height: 3rem;
-  /* Prevents layout shift */
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .role-text {
   color: #00f3ff;
-  /* Bright Cyan */
-  text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-  /* Subtle glow */
+  text-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
   font-weight: bold;
 }
 
 .cursor {
   display: inline-block;
+  color: #00f3ff;
   animation: blink 1s step-end infinite;
 }
 
@@ -90,12 +132,11 @@ h2.typewriter {
 }
 
 .hero-description {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  margin-bottom: 30px;
+  font-size: 1.12rem;
+  line-height: 1.7;
+  margin-bottom: 35px;
   color: #d1c1d6;
-  /* Slightly dimmer than pure text-light */
-  max-width: 90%;
+  max-width: 95%;
 }
 
 /* Buttons */
@@ -105,79 +146,173 @@ h2.typewriter {
 }
 
 .btn {
-  padding: 12px 30px;
-  border-radius: 8px;
+  padding: 13px 32px;
+  border-radius: 10px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-inline-icon {
+  font-size: 0.9rem;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .btn-primary {
-  background-color: var(--primary);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: #fff;
-  border: 2px solid var(--primary);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 20px rgba(123, 51, 126, 0.5);
 }
 
 .btn-primary:hover {
-  background-color: transparent;
-  color: var(--primary);
+  box-shadow: 0 8px 30px rgba(0, 243, 255, 0.45);
+  border-color: #00f3ff;
+  color: #ffffff;
+}
+
+.btn-primary:hover .btn-inline-icon {
+  transform: translateX(4px);
 }
 
 .btn-outline {
-  background-color: transparent;
+  background: rgba(255, 255, 255, 0.05);
   color: var(--text-light);
-  border: 2px solid var(--text-light);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
 }
 
 .btn-outline:hover {
-  background-color: var(--text-light);
-  color: var(--bg-dark);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--secondary);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(102, 103, 171, 0.4);
 }
 
-/* --- Right Side Image --- */
+.btn-outline:hover .btn-inline-icon {
+  transform: translateY(-2px) translateX(3px);
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+/* --- Right Side Image & Floating Chips --- */
 .hero-image-container {
   flex: 1;
   display: flex;
   justify-content: center;
+  align-items: center;
   position: relative;
-  animation: slideInRight 1s ease-out forwards;
+  perspective: 1200px;
+  will-change: transform;
 }
 
 .hero-img {
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   z-index: 2;
   position: relative;
-  /* Optional: Adds a gentle floating animation */
-  animation: float 6s ease-in-out infinite;
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.5));
+  animation: floatHero 7s ease-in-out infinite;
+}
+
+/* Floating Micro Chips */
+.floating-chip {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 30px;
+  background: rgba(66, 13, 75, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(0, 243, 255, 0.2);
+  pointer-events: auto;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.floating-chip:hover {
+  transform: translateY(-4px) scale(1.05);
+  border-color: #00f3ff;
+  box-shadow: 0 12px 30px rgba(0, 243, 255, 0.35);
+}
+
+.chip-icon {
+  font-size: 1.1rem;
+}
+
+.chip-icon.ai {
+  color: #00f3ff;
+}
+
+.chip-icon.dev {
+  color: #ff00ff;
+}
+
+.chip-top-left {
+  top: 15%;
+  left: -10px;
+  animation: chipFloatA 6s ease-in-out infinite alternate;
+}
+
+.chip-bottom-right {
+  bottom: 15%;
+  right: -10px;
+  animation: chipFloatB 7s ease-in-out infinite alternate;
+}
+
+@keyframes chipFloatA {
+  0% { transform: translateY(0px) rotate(-1deg); }
+  100% { transform: translateY(-16px) rotate(1.5deg); }
+}
+
+@keyframes chipFloatB {
+  0% { transform: translateY(0px) rotate(1deg); }
+  100% { transform: translateY(14px) rotate(-1.5deg); }
 }
 
 /* Background Glow Effect behind image */
 .hero-blob {
   position: absolute;
-  width: 400px;
-  height: 400px;
-  background: var(--primary);
-  filter: blur(80px);
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, var(--primary) 0%, rgba(102, 103, 171, 0.3) 70%, transparent 100%);
+  filter: blur(90px);
   border-radius: 50%;
-  opacity: 0.4;
+  opacity: 0.45;
   z-index: 1;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  animation: pulseGlow 8s ease-in-out infinite alternate;
 }
 
-@keyframes float {
+@keyframes pulseGlow {
+  0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.35; }
+  100% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.55; }
+}
+
+@keyframes floatHero {
   0% {
     transform: translateY(0px);
   }
-
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-15px);
   }
-
   100% {
     transform: translateY(0px);
   }
@@ -189,8 +324,8 @@ h2.typewriter {
     padding-top: 20px;
   }
 
-  h1 {
-    font-size: 2.5rem;
+  .hero-title {
+    font-size: 2.6rem;
   }
 
   h2.typewriter {
@@ -199,7 +334,6 @@ h2.typewriter {
 
   .hero-container {
     flex-direction: column-reverse;
-    /* Image on top for mobile */
     text-align: center;
   }
 
@@ -209,5 +343,9 @@ h2.typewriter {
 
   .hero-description {
     margin: 0 auto 30px auto;
+  }
+
+  .floating-chip {
+    display: none; /* Keep clean on small mobile */
   }
 }
