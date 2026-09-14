@@ -20,8 +20,11 @@ const Contact = () => {
             { threshold: 0.1 }
         );
 
-        if (sectionRef.current) observer.observe(sectionRef.current);
-        return () => observer.disconnect();
+        const el = sectionRef.current;
+        if (el) observer.observe(el);
+        return () => {
+            if (el) observer.unobserve(el);
+        };
     }, []);
 
     const sendEmail = (e) => {

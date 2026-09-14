@@ -1,13 +1,14 @@
 import React from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import About from "./components/About"; // Import the new component
+import About from "./components/About";
 import Skills from "./components/Skills";
-import TechStack from "./components/TechStack"; // Import new TechStack
+import TechStack from "./components/TechStack";
+import Experience from "./components/Experience";
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import "./index.css"; // Ensure global styles are imported
+import "./index.css";
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
       <Hero />
       <About />
       <Skills />
-      <TechStack /> {/* New Section */}
+      <TechStack />
+      <Experience />
       <Projects />
       <Contact />
       <Footer />

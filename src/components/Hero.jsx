@@ -2,22 +2,23 @@ import React, { useState, useEffect } from "react";
 import "./Hero.css";
 import heroImage from "../assets/hero-img.png"; // Make sure the path matches your file name!
 
+const ROLES = [
+  "AI Automation Engineer",
+  "Full Stack Developer",
+  "n8n & AI Agent Specialist",
+  "SaaS & Web Developer",
+];
+
 const Hero = () => {
   const [text, setText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [loopNum, setLoopNum] = useState(0);
   const [typingSpeed, setTypingSpeed] = useState(150);
 
-  const roles = [
-    "React Native Developer",
-    "WordPress Developer",
-    "React Developer",
-  ];
-
   useEffect(() => {
     const handleTyping = () => {
-      const i = loopNum % roles.length;
-      const fullText = roles[i];
+      const i = loopNum % ROLES.length;
+      const fullText = ROLES[i];
 
       setText(
         isDeleting
@@ -38,7 +39,7 @@ const Hero = () => {
 
     const timer = setTimeout(handleTyping, typingSpeed);
     return () => clearTimeout(timer);
-  }, [text, isDeleting, loopNum, roles, typingSpeed]);
+  }, [text, isDeleting, loopNum, typingSpeed]);
 
   return (
     <section id="home" className="hero">
@@ -53,13 +54,10 @@ const Hero = () => {
             I am a <span className="role-text">{text}</span>
             <span className="cursor">|</span>
           </h2>
-          {/*
           <p className="hero-description">
-            Building cross-platform mobile apps with React Native, crafting
-            custom WordPress solutions, and engineering AI systems. Let's build
-            something amazing together.
+            Building AI-powered business automations, intelligent agents, CRM workflows,
+            API integrations, SaaS applications, and full-stack web/mobile products.
           </p>
-          */}
           <div className="hero-buttons">
             <a href="#projects" className="btn btn-primary">
               My Work

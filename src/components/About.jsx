@@ -17,8 +17,11 @@ const About = () => {
       { threshold: 0.1 }, // Trigger when 10% visible
     );
 
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    const el = sectionRef.current;
+    if (el) observer.observe(el);
+    return () => {
+      if (el) observer.unobserve(el);
+    };
   }, []);
 
   return (
@@ -38,27 +41,15 @@ const About = () => {
 
           {/* Your content here... */}
           <p className="about-description">
-            I am a versatile developer who thrives on turning complex ideas into
-            reality. I specialize in <strong>WordPress</strong>, having
-            delivered 5+ custom websites with expert precision. My stack extends
-            to the <strong>React ecosystem</strong>, where I’ve built two{" "}
-            <strong>React Native</strong> mobile apps, an{" "}
-            <strong>Electron</strong> desktop application, and this portfolio
-            itself.
+            I am an <strong>AI Automation Engineer & Full Stack Developer</strong> dedicated to building intelligent business automations and modern web products. My automation work centers on architecting <strong>n8n AI agent workflows</strong>, building <strong>RAG knowledge pipelines</strong> with OpenAI and Supabase/pgvector, and engineering end-to-end <strong>GoHighLevel CRM systems</strong>.
           </p>
 
           <p className="about-description">
-            Beyond traditional coding, I am deeply invested in{" "}
-            <strong>AI & Machine Learning</strong>, creating projects like an{" "}
-            <strong>Autonomous Drone Navigation System</strong> and an{" "}
-            <strong>AI Resume Assistant</strong>.
+            What powers my automation work is a strong <strong>full-stack engineering foundation</strong>. Because I work directly with <strong>React, Next.js, Node.js, TypeScript, and PostgreSQL</strong>, I go beyond basic no-code tools — writing custom backend logic, integrating REST APIs, implementing OAuth 2.0 and WebSockets, and building deterministic fallback layers to ensure reliable execution.
           </p>
 
           <p className="about-description">
-            I believe in the power of modern tools. I rely on an AI-assisted{" "}
-            <strong>'vibe coding'</strong> workflow that lets me turn ideas into
-            working products faster than ever. I don't just write code; I
-            engineer solutions.
+            Whether developing multi-agent conversational booking flows or full-stack SaaS platforms like <strong>Adapt AI NewsPower</strong> and <strong>Elio</strong>, I focus on transforming real-world business requirements into robust, production-grade solutions.
           </p>
         </div>
       </div>

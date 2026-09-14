@@ -123,62 +123,117 @@
     font-weight: 500;
 }
 
-/* Icon specific colors (optional) */
-.tech-icon.html {
-    color: #E34F26;
+/* Icon specific colors */
+.tech-icon.n8n {
+    color: #ff6d5a;
 }
 
-.tech-icon.css {
-    color: #1572B6;
+.tech-icon.openai {
+    color: #10a37f;
 }
 
-.tech-icon.js {
-    color: #F7DF1E;
+.tech-icon.ai-agent {
+    color: #00f3ff;
 }
 
-.tech-icon.react,
-.tech-icon.react-native {
-    color: #61DAFB;
+.tech-icon.rag {
+    color: #a855f7;
+}
+
+.tech-icon.vector {
+    color: #38bdf8;
+}
+
+.tech-icon.prompt {
+    color: #ec4899;
+}
+
+.tech-icon.ghl {
+    color: #22c55e;
+}
+
+.tech-icon.workflow {
+    color: #f59e0b;
+}
+
+.tech-icon.lead {
+    color: #06b6d4;
+}
+
+.tech-icon.booking {
+    color: #3b82f6;
+}
+
+.tech-icon.process {
+    color: #8b5cf6;
+}
+
+.tech-icon.contract {
+    color: #818cf8;
+}
+
+.tech-icon.api {
+    color: #14b8a6;
+}
+
+.tech-icon.auth {
+    color: #fbbf24;
+}
+
+.tech-icon.gcal {
+    color: #4285f4;
+}
+
+.tech-icon.gdrive {
+    color: #34a853;
+}
+
+.tech-icon.search {
+    color: #f97316;
+}
+
+.tech-icon.square {
+    color: #38bdf8;
+}
+
+.tech-icon.ws {
+    color: #fbbf24;
+}
+
+.tech-icon.stripe {
+    color: #635bff;
 }
 
 .tech-icon.ts {
     color: #3178C6;
 }
 
-.tech-icon.expo {
-    color: #fff;
+.tech-icon.js {
+    color: #F7DF1E;
 }
 
-.tech-icon.wp {
-    color: #21759B;
+.tech-icon.next {
+    color: #ffffff;
 }
 
-.tech-icon.woo {
-    color: #96588a;
+.tech-icon.react {
+    color: #61DAFB;
 }
 
-.tech-icon.elementor {
-    color: #92003B;
+.tech-icon.node {
+    color: #68a063;
 }
 
-.tech-icon.firebase {
-    color: #FFCA28;
+.tech-icon.pg {
+    color: #336791;
 }
 
-.tech-icon.mongo {
-    color: #47A248;
-}
-
-.tech-icon.mysql {
-    color: #4479A1;
-}
-
-.tech-icon.git {
-    color: #F05032;
+.tech-icon.supabase {
+    color: #3ecf8e;
 }
 
 .tech-icon.github {
-    color: #fff;
+    color: #ffffff;
 }
 
 /* Responsive */

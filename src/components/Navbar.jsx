@@ -26,19 +26,22 @@ const Navbar = () => {
         {/* Navigation Links */}
         <ul className={isOpen ? "nav-menu active" : "nav-menu"}>
           <li className="nav-item">
-            <a href="#home" className="nav-link" onClick={toggleMenu}>Home</a>
+            <a href="#home" className="nav-link" onClick={() => setIsOpen(false)}>Home</a>
           </li>
           <li className="nav-item">
-            <a href="#about" className="nav-link" onClick={toggleMenu}>About</a>
+            <a href="#about" className="nav-link" onClick={() => setIsOpen(false)}>About</a>
           </li>
           <li className="nav-item">
-            <a href="#skills" className="nav-link" onClick={toggleMenu}>Skills</a>
+            <a href="#skills" className="nav-link" onClick={() => setIsOpen(false)}>Skills</a>
           </li>
           <li className="nav-item">
-            <a href="#projects" className="nav-link" onClick={toggleMenu}>Projects</a>
+            <a href="#experience" className="nav-link" onClick={() => setIsOpen(false)}>Experience</a>
           </li>
           <li className="nav-item">
-            <a href="#contact" className="nav-link-btn" onClick={toggleMenu}>Contact Me</a>
+            <a href="#projects" className="nav-link" onClick={() => setIsOpen(false)}>Projects</a>
+          </li>
+          <li className="nav-item">
+            <a href="#contact" className="nav-link-btn" onClick={() => setIsOpen(false)}>Contact Me</a>
           </li>
         </ul>
       </div>

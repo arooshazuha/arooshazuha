@@ -5,11 +5,11 @@ import skillsImage from '../assets/skills-img.png'; // Import your new image
 const Skills = () => {
   // 1. The Data: Define your skills and percentages here
   const skillsData = [
-    { name: 'WordPress Developer', level: '100%' },
-    { name: 'Vibe Coding (AI-Augmented)', level: '100%' }, // Added Vibe Coding!
-    { name: 'React Native Developer', level: '98%' },
-    { name: 'React Developer', level: '97%' },
-    { name: 'AI Engineer', level: '75%' },
+    { name: 'AI Automation & n8n Workflows', level: '95%' },
+    { name: 'Full Stack Development (React / Next.js / Node)', level: '95%' },
+    { name: 'CRM & Business Workflows (GoHighLevel)', level: '92%' },
+    { name: 'RAG & AI Agents (OpenAI, Supabase / pgvector)', level: '90%' },
+    { name: 'API Integrations & Webhooks', level: '94%' },
   ];
 
   // 2. The State: Tracks if the section is visible on screen
@@ -31,13 +31,14 @@ const Skills = () => {
       { threshold: 0.1 } // Trigger when 10% visible
     );
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    const el = sectionRef.current;
+    if (el) {
+      observer.observe(el);
     }
 
     // Cleanup function
     return () => {
-      if (sectionRef.current) observer.unobserve(sectionRef.current);
+      if (el) observer.unobserve(el);
     };
   }, []);
 

@@ -1,125 +1,187 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './Projects.css';
+import { FaCheckCircle, FaExternalLinkAlt } from 'react-icons/fa';
+
+import topfuncharters from '../assets/topfuncharters.png';
+import adaptai from '../assets/adaptai.png';
+import elio from '../assets/elio.png';
 import proj1 from '../assets/proj1.png';
 import proj2 from '../assets/proj2.png';
 import proj3 from '../assets/proj3.png';
-
-// Placeholder imports for new projects (Assume user will provide these images)
 import florex from '../assets/florex.png';
 import aqs from '../assets/aqs.png';
 import ggcc from '../assets/ggcc.png';
-import airesume from '../assets/airesume.png';
-import facerecog from '../assets/facerecog.png';
-import gitseeker from '../assets/gitseeker.png';
-import dailyglow from '../assets/dailyglow.png';
 import dronemission from '../assets/dronemission.png';
-import portfolio from '../assets/portfolio.png';
-import jobtrack from '../assets/jobtrack.png';
 
 const Projects = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeCategory, setActiveCategory] = useState("All");
   const sectionRef = useRef(null);
 
-  const categories = ["All", "React Native", "WordPress", "AI/ML", "React (Web)"];
+  const categories = ["All", "AI & Automation", "CRM & Workflows", "Full Stack SaaS", "Web & Mobile"];
 
   const projectData = [
-    // React Native
     {
       id: 1,
-      title: "Daily Glow",
-      category: "React Native",
-      image: dailyglow,
-      description: "A cross-platform mobile app for daily skincare routines and tracking. Built with React Native for smooth performance on iOS and Android.",
-      link: "https://github.com/arooshazuha/DailyGlow",
+      title: "Top Fun Charters",
+      category: "AI & Full Stack Solution",
+      secondaryCategories: ["AI & Automation", "CRM & Workflows"],
+      image: topfuncharters,
+      tagline: "A complete digital and automation solution for a private yacht charter business, combining a customer-facing website, GoHighLevel CRM automations, booking workflows, and an AI chatbot.",
+      workedOn: [
+        "Website Development: Built the customer-facing yacht charter website, booking journey, and custom experience presentations.",
+        "AI-Powered Chatbot: Developed a customer-facing AI chatbot to assist visitors with charter inquiries and booking guidance.",
+        "GoHighLevel CRM: Configured lead capture, tiered guest routing (1–6 & 7–13 guests), and automated communication workflows.",
+        "Integrations & Payments: Connected n8n automation flows, Square payment routing, and operational follow-ups."
+      ],
+      tech: ["Website Development", "AI Chatbot", "n8n", "GoHighLevel", "CRM Automation", "Booking Workflows", "Square", "APIs"],
+      link: "https://www.topfuncharters.com/",
+      linkText: "Visit Website"
     },
     {
       id: 2,
-      title: "GitSeeker",
-      category: "React Native",
-      image: gitseeker, // Using existing asset
-      description: "A powerful mobile Github search tool featuring a glassmorphic UI, providing detailed profile analytics and repository tracking via the GitHub API.",
-      link: "https://github.com/arooshazuha/GitSeekerApp",
+      title: "PDS — AI Booking Automation",
+      category: "AI & Automation",
+      image: proj2,
+      tagline: "Multi-agent conversational AI booking system for a luxury auto-detailing business.",
+      workedOn: [
+        "Built and refined 5 n8n conversational AI booking agents with concierge tone",
+        "Integrated Google Calendar appointment scheduling with timezone debugging",
+        "Replaced unreliable LLM vehicle classification with deterministic lookup logic",
+        "Designed stateful booking logic, prompt engineering & error-handling pipelines"
+      ],
+      tech: ["n8n", "AI Agents", "LLMs", "Google Calendar", "Deterministic Logic", "APIs"],
+      linkText: "AI Automation System"
     },
-    {
-      id: 11,
-      title: "JobTrack",
-      category: "React Native",
-      image: jobtrack,
-      description: "A comprehensive job tracking application that allows users to add jobs, manage related notes, and update job statuses efficiently.",
-      link: "https://github.com/arooshazuha/JobTrack",
-    },
-
-    // WordPress
     {
       id: 3,
-      title: "Florex Pharma E-commerce",
-      category: "WordPress",
-      image: florex,
-      description: "A comprehensive e-commerce platform built from scratch for a pharmaceutical brand. Features seamless API payment integration and secure checkout flow.",
-      link: "https://florexpharma.com",
+      title: "Ask James — AI Real Estate Mentor",
+      category: "AI & Automation",
+      image: proj3,
+      tagline: "AI real-estate investment mentor & RAG knowledge pipeline integrated with GoHighLevel.",
+      workedOn: [
+        "Built automated RAG pipeline: Google Drive → n8n → Embeddings → Supabase/pgvector",
+        "Integrated GoHighLevel membership validation, contact access control & HMAC security",
+        "Connected Apify & Zillow property comparable data mapping & normalization layer",
+        "Debugged upstream payload schema variations and implemented diagnostic logging"
+      ],
+      tech: ["OpenAI", "RAG", "n8n", "Supabase", "pgvector", "GoHighLevel", "Apify", "HMAC"],
+      linkText: "AI & RAG System"
     },
     {
       id: 4,
-      title: "Aqs Advisory",
-      category: "WordPress",
-      image: aqs,
-      description: "A complete digital brand overhaul for a global finance consulting firm. Delivered end-to-end execution including logo design and performance optimization.",
-      link: "https://aqsadvisory.com",
+      title: "AlphaVenue — Wedding/Event Automation",
+      category: "CRM & Workflows",
+      image: proj1,
+      tagline: "Cross-system event automation connecting GoHighLevel, BoldSign agreements & reservations.",
+      workedOn: [
+        "Built automated GoHighLevel to AlphaVenue workflow pipeline",
+        "Integrated BoldSign digital agreement generation & signature tracking",
+        "Automated post-signature reservation confirmation and invoicing workflows",
+        "Streamlined wedding & couple profile onboarding data mapping"
+      ],
+      tech: ["GoHighLevel", "BoldSign", "API Integration", "Business Workflows", "Invoicing"],
+      linkText: "Workflow Automation"
     },
     {
       id: 5,
-      title: "Government Graduate College of Commerce",
-      category: "WordPress",
+      title: "Oculo Digital / Kindwell Solutions",
+      category: "CRM & Workflows",
       image: ggcc,
-      description: "A fully customized institutional portal featuring tailored dynamic sections and specific page layouts, optimized for high traffic and accessibility.",
-      link: "https://ggcmultan.edu.pk",
+      tagline: "GoHighLevel CRM audit, funnel optimization, and workflow troubleshooting.",
+      workedOn: [
+        "Conducted comprehensive GoHighLevel CRM audit and pipeline cleanup",
+        "Resolved pricing-page and funnel integration bottlenecks",
+        "Designed client onboarding documentation & implementation specifications",
+        "Validated automated lead communication triggers and notifications"
+      ],
+      tech: ["GoHighLevel", "CRM Audit", "Funnel Optimization", "Workflow Troubleshooting"],
+      linkText: "CRM Optimization"
     },
-
-    // AI/ML
     {
       id: 6,
-      title: "AutoDrone AI",
-      category: "AI/ML",
-      image: proj3,
-      description: "An optimized autonomous navigation system for dense environments. Utilizes Reinforcement Learning and AirSim/Unreal Engine.",
+      title: "Adapt AI NewsPower — Social Media SaaS",
+      category: "Full Stack SaaS",
+      image: adaptai,
+      tagline: "Unified social media scheduling, multi-account publishing, and AI analytics platform.",
+      workedOn: [
+        "Full-stack SaaS development with Next.js, Node.js, and PostgreSQL",
+        "Multi-account OAuth 2.0 authentication and third-party social API integrations",
+        "Automated post scheduling engine and analytics aggregation dashboard",
+        "Integrated Stripe subscription billing and role-based access control"
+      ],
+      tech: ["Next.js", "Node.js", "PostgreSQL", "Stripe", "OAuth 2.0", "TypeScript"],
+      link: "https://adapt.ainewspower.com/",
+      linkText: "Live Platform"
     },
     {
       id: 7,
-      title: "AI Resume Assistant",
-      category: "AI/ML",
-      image: airesume,
-      description: "An intelligent recruitment tool that parses resumes to analyze job description fit, featuring an integrated AI chatbot to guide candidates.",
+      title: "Elio — Construction Management SaaS",
+      category: "Full Stack SaaS",
+      image: elio,
+      tagline: "Collaborative construction management platform for builders, contractors, and owners.",
+      workedOn: [
+        "Full-stack architecture across React, Next.js, React Native, Node.js, and TypeScript",
+        "Real-time chat system with read/unread tracking and socket-based notifications",
+        "Contractor quote invitation workflows, autofill & role-based project visibility",
+        "Milestone tracking, schedule summaries, and invoice management workflows"
+      ],
+      tech: ["React", "Next.js", "React Native", "Node.js", "TypeScript", "WebSockets"],
+      linkText: "Full Stack SaaS"
     },
     {
       id: 8,
-      title: "Face Recognition System",
-      category: "AI/ML",
-      image: facerecog,
-      description: "A biometric security application built in MATLAB using advanced Digital Image Processing techniques for accurate face detection and identification.",
+      title: "AI-Based Autonomous Drone Navigation",
+      category: "AI & Automation",
+      image: dronemission,
+      tagline: "GPS-independent UAV navigation in dense environments using sensor fusion and RL.",
+      workedOn: [
+        "Sensor fusion and reinforcement learning models for obstacle avoidance",
+        "High-fidelity simulation in Unreal Engine and AirSim",
+        "Senior Design Project at COMSATS University Islamabad (Awarded Grade A)",
+        "Foundation for upcoming research publication"
+      ],
+      tech: ["Reinforcement Learning", "AirSim", "Unreal Engine", "Computer Vision", "Sensor Fusion"],
+      linkText: "AI & Robotics Spec"
     },
-
-    // React (Web)
     {
       id: 9,
-      title: "Drone Mission Planner (Electron)",
-      category: "React (Web)",
-      image: dronemission,
-      description: "A desktop-class mission control dashboard built with React and Electron. Allows users to plan flight paths, view live video feeds, and monitor telemetry.",
+      title: "Florex Pharma E-commerce",
+      category: "Web & Mobile",
+      image: florex,
+      tagline: "Custom pharmaceutical e-commerce platform with secure payment integration.",
+      workedOn: [
+        "Custom WordPress and WooCommerce e-commerce development",
+        "Secure API payment gateway integration and optimized checkout flow",
+        "Performance optimization, custom plugin configuration, and backup maintenance"
+      ],
+      tech: ["WordPress", "WooCommerce", "PHP", "JavaScript", "Payment Gateway"],
+      link: "https://florexpharma.com/",
+      linkText: "Visit Website"
     },
     {
       id: 10,
-      title: "Personal Portfolio",
-      category: "React (Web)",
-      image: portfolio,
-      description: "This high-performance, responsive portfolio website. Built with React and Vite, featuring custom glassmorphism UI and ambient particle background.",
+      title: "AQS Consultancy & Enterprise",
+      category: "Web & Mobile",
+      image: aqs,
+      tagline: "Corporate website and digital brand platform for engineering & technical consultancy.",
+      workedOn: [
+        "Developed the official corporate website with tailored service showcases and inquiry funnels",
+        "Engineered responsive UI/UX architecture and brand styling for technical decision-makers",
+        "Conducted performance optimization, cross-browser compatibility, and SEO setup"
+      ],
+      tech: ["WordPress", "PHP", "JavaScript", "Responsive Design", "SEO Optimization"],
+      link: "https://aqspk.com/",
+      linkText: "Visit Website"
     }
   ];
 
-  // Logic to get current projects
   const filteredProjects = activeCategory === "All"
     ? projectData
-    : projectData.filter(project => project.category === activeCategory);
+    : projectData.filter(project => 
+        project.category === activeCategory || 
+        (Array.isArray(project.secondaryCategories) && project.secondaryCategories.includes(activeCategory))
+      );
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -129,20 +191,24 @@ const Projects = () => {
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.05 }
     );
-    if (sectionRef.current) observer.observe(sectionRef.current);
-    return () => observer.disconnect();
+    const el = sectionRef.current;
+    if (el) observer.observe(el);
+    return () => {
+      if (el) observer.unobserve(el);
+    };
   }, []);
 
   return (
     <section id="projects" className="projects" ref={sectionRef}>
       <div className="projects-container">
 
-        {/* Title */}
-        <h2 className={`section-title ${isVisible ? 'show' : 'hidden-left'}`}>
-          Featured Projects
-        </h2>
+        {/* Section Header */}
+        <div className={`projects-header ${isVisible ? 'show' : 'hidden-top'}`}>
+          <h2 className="section-title">Featured Projects</h2>
+          <p className="section-subtitle">AI Automations, Agent Workflows & Full-Stack Systems</p>
+        </div>
 
         {/* Filter Tabs */}
         <div className={`projects-tabs ${isVisible ? 'show' : 'hidden-right'}`}>
@@ -157,23 +223,63 @@ const Projects = () => {
           ))}
         </div>
 
-        {/* Grid */}
+        {/* Projects Grid */}
         <div className="projects-grid">
           {filteredProjects.map((project, index) => (
             <div
               key={project.id}
               className={`project-card ${isVisible ? 'show' : 'hidden-top'}`}
-              style={{ transitionDelay: `${index * 0.3}s` }}
+              style={{ transitionDelay: `${index * 0.15}s` }}
             >
+              {/* Card Image Banner */}
               <div className="card-image">
                 <img src={project.image} alt={project.title} />
+                <div className="card-image-overlay"></div>
+                <span className="card-category-pill">{project.category}</span>
               </div>
 
+              {/* Card Body */}
               <div className="card-content">
-                <span className="card-category">{project.category}</span>
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <a href={project.link || "#"} target={project.link ? "_blank" : "_self"} rel={project.link ? "noopener noreferrer" : ""} className="card-btn">View Project</a>
+                <h3 className="project-title">{project.title}</h3>
+                <p className="project-tagline">{project.tagline}</p>
+
+                {/* "What I Worked On" Highlights */}
+                <div className="project-highlights">
+                  <span className="highlights-title">What I Built & Engineered:</span>
+                  <ul className="project-bullet-list">
+                    {project.workedOn.map((item, idx) => (
+                      <li key={idx} className="project-bullet-item">
+                        <FaCheckCircle className="bullet-icon" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Tech Stack Badges */}
+                <div className="project-tech-badges">
+                  {project.tech.map((t, idx) => (
+                    <span key={idx} className="project-tech-tag">{t}</span>
+                  ))}
+                </div>
+
+                {/* Footer Action */}
+                <div className="card-action-bar">
+                  {project.link ? (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="card-btn link-active"
+                    >
+                      {project.linkText} <FaExternalLinkAlt className="btn-icon" />
+                    </a>
+                  ) : (
+                    <span className="card-badge-status">
+                      {project.linkText}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           ))}

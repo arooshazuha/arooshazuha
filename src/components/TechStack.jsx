@@ -1,10 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './TechStack.css';
 import {
-    FaHtml5, FaCss3Alt, FaJs, FaReact, FaWordpress, FaWordpressSimple, FaElementor,
-    FaGitAlt, FaGithub, FaSearch, FaPaintBrush, FaMobileAlt, FaDatabase
+    FaRobot, FaBrain, FaCogs, FaCalendarAlt, FaDatabase, FaStripe,
+    FaGoogleDrive, FaExchangeAlt, FaReact, FaGithub,
+    FaKey, FaFileContract, FaSearch, FaProjectDiagram, FaBolt
 } from 'react-icons/fa';
-import { SiTypescript, SiExpo, SiFirebase, SiMongodb, SiMysql } from 'react-icons/si';
+import {
+    SiTypescript, SiJavascript, SiNextdotjs, SiNodedotjs,
+    SiPostgresql, SiSupabase, SiOpenai, SiN8N
+} from 'react-icons/si';
 
 const TechStack = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -12,49 +16,47 @@ const TechStack = () => {
 
     const techCategories = [
         {
-            title: "Frontend",
+            title: "AI & Automation",
             tools: [
-                { name: "HTML5", icon: <FaHtml5 className="tech-icon html" /> },
-                { name: "CSS3", icon: <FaCss3Alt className="tech-icon css" /> },
-                { name: "JavaScript", icon: <FaJs className="tech-icon js" /> },
+                { name: "n8n", icon: <SiN8N className="tech-icon n8n" /> },
+                { name: "AI Agents", icon: <FaRobot className="tech-icon ai-agent" /> },
+                { name: "LLMs / OpenAI", icon: <SiOpenai className="tech-icon openai" /> },
+                { name: "RAG Architecture", icon: <FaBrain className="tech-icon rag" /> },
+                { name: "Prompt Eng.", icon: <FaProjectDiagram className="tech-icon prompt" /> },
+                { name: "GoHighLevel", icon: <FaCogs className="tech-icon ghl" /> },
+            ]
+        },
+        {
+            title: "Full Stack",
+            tools: [
                 { name: "React", icon: <FaReact className="tech-icon react" /> },
+                { name: "Next.js", icon: <SiNextdotjs className="tech-icon next" /> },
+                { name: "Node.js", icon: <SiNodedotjs className="tech-icon node" /> },
                 { name: "TypeScript", icon: <SiTypescript className="tech-icon ts" /> },
-                { name: "Responsive", icon: <FaMobileAlt className="tech-icon mobile" /> },
+                { name: "JavaScript", icon: <SiJavascript className="tech-icon js" /> },
+                { name: "React Native", icon: <FaReact className="tech-icon react" /> },
             ]
         },
         {
-            title: "Mobile App Dev",
+            title: "APIs & Backend",
             tools: [
-                { name: "React Native", icon: <FaReact className="tech-icon react-native" /> },
-                { name: "Expo", icon: <SiExpo className="tech-icon expo" /> },
-                { name: "TypeScript", icon: <SiTypescript className="tech-icon ts" /> },
+                { name: "REST APIs", icon: <FaExchangeAlt className="tech-icon api" /> },
+                { name: "OAuth 2.0 / HMAC", icon: <FaKey className="tech-icon auth" /> },
+                { name: "PostgreSQL", icon: <SiPostgresql className="tech-icon pg" /> },
+                { name: "Supabase", icon: <SiSupabase className="tech-icon supabase" /> },
+                { name: "pgvector", icon: <FaDatabase className="tech-icon vector" /> },
+                { name: "WebSockets", icon: <FaBolt className="tech-icon ws" /> },
             ]
         },
         {
-            title: "CMS & Web",
+            title: "Integrations & Workflows",
             tools: [
-                { name: "WordPress", icon: <FaWordpress className="tech-icon wp" /> },
-                { name: "WooCommerce", icon: <FaWordpressSimple className="tech-icon woo" /> },
-                { name: "Elementor", icon: <FaElementor className="tech-icon elementor" /> },
-                { name: "Custom Themes", icon: <FaPaintBrush className="tech-icon theme" /> },
-            ]
-        },
-        {
-            title: "Backend & Data",
-            tools: [
-                { name: "Firebase", icon: <SiFirebase className="tech-icon firebase" /> },
-                { name: "REST APIs", icon: <FaDatabase className="tech-icon db" /> },
-                { name: "MongoDB", icon: <SiMongodb className="tech-icon mongo" /> },
-                { name: "MySQL", icon: <SiMysql className="tech-icon mysql" /> },
-            ]
-        },
-        {
-            title: "Tools & Practices",
-            tools: [
-                { name: "Git", icon: <FaGitAlt className="tech-icon git" /> },
-                { name: "GitHub", icon: <FaGithub className="tech-icon github" /> },
-                { name: "SEO Opt.", icon: <FaSearch className="tech-icon seo" /> },
-                { name: "UI/UX", icon: <FaPaintBrush className="tech-icon ui" /> }, // Reusing PaintBrush or could use FaFigma
+                { name: "Google Calendar", icon: <FaCalendarAlt className="tech-icon gcal" /> },
+                { name: "Google Drive", icon: <FaGoogleDrive className="tech-icon gdrive" /> },
+                { name: "Apify / Zillow", icon: <FaSearch className="tech-icon search" /> },
+                { name: "Square", icon: <FaExchangeAlt className="tech-icon square" /> },
+                { name: "BoldSign", icon: <FaFileContract className="tech-icon contract" /> },
+                { name: "Stripe", icon: <FaStripe className="tech-icon stripe" /> },
             ]
         }
     ];
@@ -70,10 +72,11 @@ const TechStack = () => {
             { threshold: 0.1 }
         );
 
-        if (sectionRef.current) observer.observe(sectionRef.current);
+        const el = sectionRef.current;
+        if (el) observer.observe(el);
 
         return () => {
-            if (sectionRef.current) observer.unobserve(sectionRef.current);
+            if (el) observer.unobserve(el);
         };
     }, []);
 
