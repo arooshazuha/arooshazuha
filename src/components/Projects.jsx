@@ -1,341 +1,307 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { FaArrowRight, FaArrowUp } from 'react-icons/fa';
+import { PROJECTS, CHANNELS, FLAGSHIP_IDS, channelForCategory } from '../data/projects';
 import './Projects.css';
-import { FaCheckCircle, FaExternalLinkAlt, FaArrowRight } from 'react-icons/fa';
-import { useTilt } from '../hooks/useTilt';
 
-import topfuncharters from '../assets/topfuncharters.png';
-import adaptai from '../assets/adaptai.png';
-import elio from '../assets/elio.png';
-import proj1 from '../assets/proj1.png';
-import proj2 from '../assets/proj2.png';
-import proj3 from '../assets/proj3.png';
-import florex from '../assets/florex.png';
-import aqs from '../assets/aqs.png';
-import ggcc from '../assets/ggcc.png';
-import dronemission from '../assets/dronemission.png';
+const pad = (n) => String(n).padStart(2, '0');
 
-// Individual Project Card with 3D Tilt & Specular Light
-const ProjectCard = ({ project, index, isVisible }) => {
-  const { ref, onMouseMove, onMouseLeave } = useTilt({ maxTilt: 4, perspective: 1100, scale: 1.015 });
+/* Tech not already named in the architecture chain, so the two lists differ. */
+const extraTech = (p) => {
+  // Normalise the GHL alias so "GHL CRM" in the chain also covers "GoHighLevel".
+  const chain = p.architecture.join(' ').toLowerCase().replace(/\bghl\b/g, 'gohighlevel');
+  return p.tech.filter((t) => !chain.includes(t.toLowerCase().split(' (')[0]));
+};
+
+const inChannel = (p, ch) => {
+  if (!ch) return true;
+  const cat = CHANNELS.find((c) => c.id === ch)?.category;
+  return p.category === cat || (p.secondaryCategories || []).includes(cat);
+};
+
+/* The project's architecture drawn as a signal chain with a travelling pulse. */
+const SignalChain = ({ steps }) => (
+  <ol className="chain" aria-label="System architecture">
+    {steps.map((s, i) => (
+      <li key={s} className="chain-node" style={{ '--n': i }}>
+        <span>{s}</span>
+        {i < steps.length - 1 && <span className="chain-wire" aria-hidden="true" />}
+      </li>
+    ))}
+  </ol>
+);
+
+const ProjectLink = ({ project, className = '' }) =>
+  project.link ? (
+    <a href={project.link} target="_blank" rel="noopener noreferrer" className={`key key-soft proj-link ${className}`}>
+      {project.linkText || 'Visit website'}
+      <FaArrowUp className="proj-link-icon" aria-hidden="true" />
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
+  ) : (
+    <span className={`proj-nolink readout ${className}`}>{project.linkText} · private build</span>
+  );
+
+/* Flagship capture: arm, trigger, capture, then the still result. */
+const Capture = ({ project, rank }) => {
+  const ref = useRef(null);
+  const [stage, setStage] = useState(() =>
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window) ? 3 : 0,
+  );
+  const ch = channelForCategory(project.category);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    if (stage === 3) return undefined;
+    const timers = [];
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        setStage(1);
+        timers.push(window.setTimeout(() => setStage(2), 450));
+        timers.push(window.setTimeout(() => setStage(3), 1150));
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      timers.forEach((t) => window.clearTimeout(t));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const stageLabel = ['Waiting', 'Armed', 'Triggered', 'Captured'][stage];
 
   return (
-    <div
-      ref={ref}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      className={`project-card ${isVisible ? 'show' : 'hidden-top'}`}
-      style={{ transitionDelay: `${(index % 3) * 0.12}s` }}
-    >
-      <div className="card-glare" />
-
-      {/* Card Image Banner */}
-      <div className="card-image">
-        <img src={project.image} alt={project.title} loading="lazy" />
-        <div className="card-image-overlay"></div>
-        <span className="card-category-pill">{project.category}</span>
-
-        {/* Dynamic Project Flow Mini Indicator for AI & SaaS architectures */}
-        {project.id === 1 && (
-          <div className="project-architecture-ribbon">
-            <span>Website</span>
-            <FaArrowRight className="ribbon-arrow" />
-            <span>Chatbot</span>
-            <FaArrowRight className="ribbon-arrow" />
-            <span>GHL CRM</span>
-            <FaArrowRight className="ribbon-arrow" />
-            <span>Booking</span>
-          </div>
-        )}
-        {project.id === 2 && (
-          <div className="project-architecture-ribbon">
-            <span>5 n8n Agents</span>
-            <FaArrowRight className="ribbon-arrow" />
-            <span>Calendar API</span>
-            <FaArrowRight className="ribbon-arrow" />
-            <span>Logic</span>
-          </div>
-        )}
-        {project.id === 3 && (
-          <div className="project-architecture-ribbon">
-            <span>Drive</span>
-            <FaArrowRight className="ribbon-arrow" />
-            <span>n8n RAG</span>
-            <FaArrowRight className="ribbon-arrow" />
-            <span>pgvector</span>
-          </div>
-        )}
+    <article ref={ref} className={`cap cap-${rank} stage-${stage}`} data-ch={ch.id} aria-labelledby={`cap-${project.id}`}>
+      <div className="cap-screen ticks">
+        <div className="cap-screen-top readout">
+          <span className="ch-badge"><span className="ch-num">{ch.num}</span>{ch.label}</span>
+          <span className="cap-stage">
+            <span className="cap-stage-led" aria-hidden="true" />
+            {stageLabel}
+          </span>
+        </div>
+        <div className="cap-frame">
+          <img src={project.image} alt={project.imageAlt || `Screenshot of ${project.title}`} loading="lazy" decoding="async" />
+          <span className="cap-scan" aria-hidden="true" />
+        </div>
+        <div className="cap-screen-bot readout">
+          <span>{`Capture ${pad(project.id)} / ${pad(PROJECTS.length)}`}</span>
+          <span>{project.tech.slice(0, 2).join(' · ')}</span>
+        </div>
       </div>
 
-      {/* Card Body */}
-      <div className="card-content">
-        <h3 className="project-title">{project.title}</h3>
-        <p className="project-tagline">{project.tagline}</p>
-
-        {/* "What I Worked On" Highlights */}
-        <div className="project-highlights">
-          <span className="highlights-title">What I Built & Engineered:</span>
-          <ul className="project-bullet-list">
-            {project.workedOn.map((item, idx) => (
-              <li key={idx} className="project-bullet-item">
-                <FaCheckCircle className="bullet-icon" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Tech Stack Badges */}
-        <div className="project-tech-badges">
-          {project.tech.map((t, idx) => (
-            <span key={idx} className="project-tech-tag">{t}</span>
+      <div className="cap-info">
+        <h3 id={`cap-${project.id}`} className="cap-title">{project.title}</h3>
+        <p className="cap-tagline">{project.tagline}</p>
+        <SignalChain steps={project.architecture} />
+        <h4 className="cap-sub">What I built</h4>
+        <ul className="cap-list">
+          {project.workedOn.map((w) => (
+            <li key={w}>{w}</li>
           ))}
-        </div>
+        </ul>
+        <ul className="cap-tech" aria-label="Other technologies">
+          {extraTech(project).map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+        <ProjectLink project={project} />
+      </div>
+    </article>
+  );
+};
 
-        {/* Footer Action */}
-        <div className="card-action-bar">
-          {project.link ? (
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="card-btn link-active"
-            >
-              <span>{project.linkText}</span>
-              <FaExternalLinkAlt className="btn-icon" />
-            </a>
-          ) : (
-            <span className="card-badge-status">
-              {project.linkText}
-            </span>
-          )}
+/* Index row: fixed numbered position; expands into the full record. */
+const Row = ({ project, open, onToggle, dim, onPreview }) => {
+  const panelId = useId();
+  const ch = channelForCategory(project.category);
+  return (
+    <li
+      className={`row ${open ? 'is-open' : ''} ${dim ? 'is-dim' : ''}`}
+      data-ch={ch.id}
+      onMouseEnter={() => onPreview(project)}
+      onMouseLeave={() => onPreview(null)}
+    >
+      <h3 className="row-h">
+        <button
+          type="button"
+          className="row-btn"
+          aria-expanded={open}
+          aria-controls={panelId}
+          onClick={onToggle}
+          onFocus={() => onPreview(null)}
+        >
+          <span className="row-num readout">{pad(project.id)}</span>
+          <span className="row-title">{project.title}</span>
+          <span className="row-ch">
+            <span className="ch-badge"><span className="ch-num">{ch.num}</span></span>
+            <span className="row-cat">{ch.label}</span>
+          </span>
+          <span className="row-toggle" aria-hidden="true" />
+        </button>
+      </h3>
+      <div id={panelId} className="row-panel" hidden={!open}>
+        <div className="row-panel-inner">
+          <div className="row-shot capture-free">
+            <img src={project.image} alt={project.imageAlt || `Screenshot of ${project.title}`} loading="lazy" decoding="async" />
+          </div>
+          <div className="row-detail">
+            <p className="row-tagline">{project.tagline}</p>
+            <SignalChain steps={project.architecture} />
+            <ul className="cap-list">
+              {project.workedOn.map((w) => (
+                <li key={w}>{w}</li>
+              ))}
+            </ul>
+            <ul className="cap-tech" aria-label="Other technologies">
+              {extraTech(project).map((t) => (
+                <li key={t}>{t}</li>
+              ))}
+            </ul>
+            <ProjectLink project={project} />
+          </div>
         </div>
       </div>
-    </div>
+    </li>
   );
 };
 
 const Projects = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("All");
-  const sectionRef = useRef(null);
+  const [channel, setChannel] = useState(null);
+  const [openId, setOpenId] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const previewRef = useRef(null);
+  const listRef = useRef(null);
 
-  const categories = ["All", "AI & Automation", "CRM & Workflows", "Full Stack SaaS", "Web & Mobile"];
+  const flagships = useMemo(() => FLAGSHIP_IDS.map((id) => PROJECTS.find((p) => p.id === id)), []);
+  const counts = useMemo(
+    () => Object.fromEntries(CHANNELS.map((c) => [c.id, PROJECTS.filter((p) => inChannel(p, c.id)).length])),
+    [],
+  );
 
-  const projectData = [
-    {
-      id: 1,
-      title: "Top Fun Charters",
-      category: "AI & Full Stack Solution",
-      secondaryCategories: ["AI & Automation", "CRM & Workflows"],
-      image: topfuncharters,
-      tagline: "A complete digital and automation solution for a private yacht charter business, combining a customer-facing website, GoHighLevel CRM automations, booking workflows, and an AI chatbot.",
-      workedOn: [
-        "Website Development: Built the customer-facing yacht charter website, booking journey, and custom experience presentations.",
-        "AI-Powered Chatbot: Developed a customer-facing AI chatbot to assist visitors with charter inquiries and booking guidance.",
-        "GoHighLevel CRM: Configured lead capture, tiered guest routing (1–6 & 7–13 guests), and automated communication workflows.",
-        "Integrations & Payments: Connected n8n automation flows, Square payment routing, and operational follow-ups."
-      ],
-      tech: ["Website Development", "AI Chatbot", "n8n", "GoHighLevel", "CRM Automation", "Booking Workflows", "Square", "APIs"],
-      link: "https://www.topfuncharters.com/",
-      linkText: "Visit Website"
-    },
-    {
-      id: 2,
-      title: "PDS — AI Booking Automation",
-      category: "AI & Automation",
-      image: proj2,
-      tagline: "Multi-agent conversational AI booking system for a luxury auto-detailing business.",
-      workedOn: [
-        "Built and refined 5 n8n conversational AI booking agents with concierge tone",
-        "Integrated Google Calendar appointment scheduling with timezone debugging",
-        "Replaced unreliable LLM vehicle classification with deterministic lookup logic",
-        "Designed stateful booking logic, prompt engineering & error-handling pipelines"
-      ],
-      tech: ["n8n", "AI Agents", "LLMs", "Google Calendar", "Deterministic Logic", "APIs"],
-      linkText: "AI Automation System"
-    },
-    {
-      id: 3,
-      title: "Ask James — AI Real Estate Mentor",
-      category: "AI & Automation",
-      image: proj3,
-      tagline: "AI real-estate investment mentor & RAG knowledge pipeline integrated with GoHighLevel.",
-      workedOn: [
-        "Built automated RAG pipeline: Google Drive → n8n → Embeddings → Supabase/pgvector",
-        "Integrated GoHighLevel membership validation, contact access control & HMAC security",
-        "Connected Apify & Zillow property comparable data mapping & normalization layer",
-        "Debugged upstream payload schema variations and implemented diagnostic logging"
-      ],
-      tech: ["OpenAI", "RAG", "n8n", "Supabase", "pgvector", "GoHighLevel", "Apify", "HMAC"],
-      linkText: "AI & RAG System"
-    },
-    {
-      id: 4,
-      title: "AlphaVenue — Wedding/Event Automation",
-      category: "CRM & Workflows",
-      image: proj1,
-      tagline: "Cross-system event automation connecting GoHighLevel, BoldSign agreements & reservations.",
-      workedOn: [
-        "Built automated GoHighLevel to AlphaVenue workflow pipeline",
-        "Integrated BoldSign digital agreement generation & signature tracking",
-        "Automated post-signature reservation confirmation and invoicing workflows",
-        "Streamlined wedding & couple profile onboarding data mapping"
-      ],
-      tech: ["GoHighLevel", "BoldSign", "API Integration", "Business Workflows", "Invoicing"],
-      linkText: "Workflow Automation"
-    },
-    {
-      id: 5,
-      title: "Oculo Digital / Kindwell Solutions",
-      category: "CRM & Workflows",
-      image: ggcc,
-      tagline: "GoHighLevel CRM audit, funnel optimization, and workflow troubleshooting.",
-      workedOn: [
-        "Conducted comprehensive GoHighLevel CRM audit and pipeline cleanup",
-        "Resolved pricing-page and funnel integration bottlenecks",
-        "Designed client onboarding documentation & implementation specifications",
-        "Validated automated lead communication triggers and notifications"
-      ],
-      tech: ["GoHighLevel", "CRM Audit", "Funnel Optimization", "Workflow Troubleshooting"],
-      linkText: "CRM Optimization"
-    },
-    {
-      id: 6,
-      title: "Adapt AI NewsPower — Social Media SaaS",
-      category: "Full Stack SaaS",
-      image: adaptai,
-      tagline: "Unified social media scheduling, multi-account publishing, and AI analytics platform.",
-      workedOn: [
-        "Full-stack SaaS development with Next.js, Node.js, and PostgreSQL",
-        "Multi-account OAuth 2.0 authentication and third-party social API integrations",
-        "Automated post scheduling engine and analytics aggregation dashboard",
-        "Integrated Stripe subscription billing and role-based access control"
-      ],
-      tech: ["Next.js", "Node.js", "PostgreSQL", "Stripe", "OAuth 2.0", "TypeScript"],
-      link: "https://adapt.ainewspower.com/",
-      linkText: "Live Platform"
-    },
-    {
-      id: 7,
-      title: "Elio — Construction Management SaaS",
-      category: "Full Stack SaaS",
-      image: elio,
-      tagline: "Collaborative construction management platform for builders, contractors, and owners.",
-      workedOn: [
-        "Full-stack architecture across React, Next.js, React Native, Node.js, and TypeScript",
-        "Real-time chat system with read/unread tracking and socket-based notifications",
-        "Contractor quote invitation workflows, autofill & role-based project visibility",
-        "Milestone tracking, schedule summaries, and invoice management workflows"
-      ],
-      tech: ["React", "Next.js", "React Native", "Node.js", "TypeScript", "WebSockets"],
-      linkText: "Full Stack SaaS"
-    },
-    {
-      id: 8,
-      title: "AI-Based Autonomous Drone Navigation",
-      category: "AI & Automation",
-      image: dronemission,
-      tagline: "GPS-independent UAV navigation in dense environments using sensor fusion and RL.",
-      workedOn: [
-        "Sensor fusion and reinforcement learning models for obstacle avoidance",
-        "High-fidelity simulation in Unreal Engine and AirSim",
-        "Senior Design Project at COMSATS University Islamabad (Awarded Grade A)",
-        "Foundation for upcoming research publication"
-      ],
-      tech: ["Reinforcement Learning", "AirSim", "Unreal Engine", "Computer Vision", "Sensor Fusion"],
-      linkText: "AI & Robotics Spec"
-    },
-    {
-      id: 9,
-      title: "Florex Pharma E-commerce",
-      category: "Web & Mobile",
-      image: florex,
-      tagline: "Custom pharmaceutical e-commerce platform with secure payment integration.",
-      workedOn: [
-        "Custom WordPress and WooCommerce e-commerce development",
-        "Secure API payment gateway integration and optimized checkout flow",
-        "Performance optimization, custom plugin configuration, and backup maintenance"
-      ],
-      tech: ["WordPress", "WooCommerce", "PHP", "JavaScript", "Payment Gateway"],
-      link: "https://florexpharma.com/",
-      linkText: "Visit Website"
-    },
-    {
-      id: 10,
-      title: "AQS Consultancy & Enterprise",
-      category: "Web & Mobile",
-      image: aqs,
-      tagline: "Corporate website and digital brand platform for engineering & technical consultancy.",
-      workedOn: [
-        "Developed the official corporate website with tailored service showcases and inquiry funnels",
-        "Engineered responsive UI/UX architecture and brand styling for technical decision-makers",
-        "Conducted performance optimization, cross-browser compatibility, and SEO setup"
-      ],
-      tech: ["WordPress", "PHP", "JavaScript", "Responsive Design", "SEO Optimization"],
-      link: "https://aqspk.com/",
-      linkText: "Visit Website"
-    }
-  ];
-
-  const filteredProjects = activeCategory === "All"
-    ? projectData
-    : projectData.filter(project => 
-        project.category === activeCategory || 
-        (Array.isArray(project.secondaryCategories) && project.secondaryCategories.includes(activeCategory))
-      );
-
+  // Floating preview follows the pointer with a little lag (fine pointers only).
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.05 }
-    );
-    const el = sectionRef.current;
-    if (el) observer.observe(el);
+    const el = previewRef.current;
+    const list = listRef.current;
+    if (!el || !list) return undefined;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return undefined;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const target = { x: 0, y: 0 };
+    const pos = { x: 0, y: 0 };
+    let raf = 0;
+    const tick = () => {
+      pos.x += (target.x - pos.x) * (reduce ? 1 : 0.16);
+      pos.y += (target.y - pos.y) * (reduce ? 1 : 0.16);
+      el.style.transform = `translate3d(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px, 0)`;
+      raf = requestAnimationFrame(tick);
+    };
+    const onMove = (e) => {
+      target.x = e.clientX + 28;
+      target.y = e.clientY - 90;
+      if (!raf) {
+        pos.x = target.x;
+        pos.y = target.y;
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    const onLeave = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    };
+    list.addEventListener('pointermove', onMove);
+    list.addEventListener('pointerleave', onLeave);
     return () => {
-      if (el) observer.unobserve(el);
+      cancelAnimationFrame(raf);
+      list.removeEventListener('pointermove', onMove);
+      list.removeEventListener('pointerleave', onLeave);
     };
   }, []);
 
+  const activeCount = channel ? counts[channel] : PROJECTS.length;
+  const showPreview = preview && preview.id !== openId;
+
   return (
-    <section id="projects" className="projects" ref={sectionRef}>
-      <div className="projects-container">
-
-        {/* Section Header */}
-        <div className={`projects-header ${isVisible ? 'show' : 'hidden-top'}`}>
-          <h2 className="section-title">Featured Projects</h2>
-          <p className="section-subtitle">AI Automations, Agent Workflows & Full-Stack Systems</p>
+    <section id="projects" className="section projects" aria-labelledby="projects-title">
+      <div className="wrap">
+        <div className="section-head">
+          <h2 id="projects-title" className="section-title" data-reveal="sweep">
+            Selected <em>work</em>
+          </h2>
+          <p className="section-intro" data-reveal style={{ '--d': '120ms' }}>
+            CRM automations, n8n agent workflows, SaaS applications and client systems. Four
+            flagship captures first, then the full index of {PROJECTS.length}.
+          </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div className={`projects-tabs ${isVisible ? 'show' : 'hidden-right'}`}>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={`tab-btn ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
+        <div className="caps">
+          {flagships.map((p, i) => (
+            <Capture key={p.id} project={p} rank={i === 0 ? 'lead' : 'std'} />
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <div className="projects-grid">
-          {filteredProjects.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={index}
-              isVisible={isVisible}
-            />
-          ))}
-        </div>
+        <div className="index">
+          <div className="index-head">
+            <h3 className="index-title">Full index</h3>
+            <div className="index-filters" role="group" aria-label="Isolate projects by channel">
+              <button
+                type="button"
+                className={`softkey ${channel === null ? 'is-on' : ''}`}
+                aria-pressed={channel === null}
+                onClick={() => setChannel(null)}
+              >
+                All <span className="readout">{PROJECTS.length}</span>
+              </button>
+              {CHANNELS.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  data-ch={c.id}
+                  className={`softkey ${channel === c.id ? 'is-on' : ''}`}
+                  aria-pressed={channel === c.id}
+                  onClick={() => setChannel((v) => (v === c.id ? null : c.id))}
+                >
+                  <span className="softkey-num">{c.num}</span>
+                  {c.label}
+                  <span className="readout">{counts[c.id]}</span>
+                </button>
+              ))}
+            </div>
+            <p className="index-status readout" aria-live="polite">
+              {channel
+                ? `${activeCount} of ${PROJECTS.length} on ${CHANNELS.find((c) => c.id === channel).num}; others dimmed`
+                : `${PROJECTS.length} of ${PROJECTS.length} shown`}
+            </p>
+          </div>
 
+          <ol ref={listRef} className="rows">
+            {PROJECTS.map((p) => (
+              <Row
+                key={p.id}
+                project={p}
+                open={openId === p.id}
+                dim={!inChannel(p, channel)}
+                onToggle={() => setOpenId((v) => (v === p.id ? null : p.id))}
+                onPreview={setPreview}
+              />
+            ))}
+          </ol>
+        </div>
+      </div>
+
+      <div ref={previewRef} className={`row-preview ${showPreview ? 'is-on' : ''}`} aria-hidden="true">
+        {preview && (
+          <>
+            <img key={preview.id} src={preview.image} alt="" />
+            <span className="row-preview-meta readout">
+              {pad(preview.id)} · {preview.tech.slice(0, 2).join(' · ')}
+              <FaArrowRight />
+            </span>
+          </>
+        )}
       </div>
     </section>
   );

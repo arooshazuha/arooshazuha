@@ -1,45 +1,35 @@
-import React from "react";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import About from "./components/About";
-import Skills from "./components/Skills";
-import TechStack from "./components/TechStack";
-import Experience from "./components/Experience";
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import About from './components/About';
+import Skills from './components/Skills';
+import TechStack from './components/TechStack';
+import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import CustomCursor from './components/CustomCursor';
-import ScrollProgress from './components/ScrollProgress';
-import AmbientBackground from './components/AmbientBackground';
 import BackToTop from './components/BackToTop';
-import "./index.css";
+import { useRevealAll } from './hooks/useReveal';
 
 function App() {
+  useRevealAll();
+
   return (
-    <div className="portfolio-app-root">
-      {/* Top Scroll Progress Indicator */}
-      <ScrollProgress />
-
-      {/* Desktop Context-Aware Interactive Cursor */}
-      <CustomCursor />
-
-      {/* Interactive Ambient Canvas & Constellation Background */}
-      <AmbientBackground />
-
-      {/* Main Content Sections */}
+    <>
+      <a href="#main" className="skip-link">Skip to content</a>
+      <div className="scope-ground" aria-hidden="true" />
       <Navbar />
-      <Hero />
-      <About />
-      <Skills />
-      <TechStack />
-      <Experience />
-      <Projects />
-      <Contact />
+      <main id="main">
+        <Hero />
+        <About />
+        <Skills />
+        <TechStack />
+        <Experience />
+        <Projects />
+        <Contact />
+      </main>
       <Footer />
-
-      {/* Floating Back-to-Top Button */}
       <BackToTop />
-    </div>
+    </>
   );
 }
 

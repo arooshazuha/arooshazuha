@@ -1,87 +1,163 @@
-import React, { useEffect, useRef, useState } from "react";
-import { FaBolt, FaLayerGroup, FaRobot } from "react-icons/fa";
-import { useTilt } from "../hooks/useTilt";
-import "./About.css";
-import aboutImage from "../assets/about-img.png";
+import { useEffect, useRef } from 'react';
+import aboutImage from '../assets/opt/about-img.webp';
+import './About.css';
+
+const STATEMENT =
+  'I verify every automation against live data: debugging Salesforce OAuth2 field mappings in production, reversing 1,217 mistakenly tagged contacts without breaking active triggers, and guarding AI output so it never invents a price.';
+
+const BLOCKS = [
+  {
+    title: 'What I build',
+    body: (
+      <>
+        Production systems across <strong>n8n</strong>, <strong>GoHighLevel</strong>,{' '}
+        <strong>WordPress</strong> and <strong>Next.js</strong> for US real-estate brokerages,
+        yacht charters and agency clients: the core plumbing that connects a company's website,
+        CRM, payments and AI chat assistants.
+      </>
+    ),
+  },
+  {
+    title: 'How I work',
+    body: (
+      <>
+        Not by green banners or theoretical tests. I trace field mappings, audit contact logs and
+        write deterministic output guards so AI models cannot hallucinate pricing or make
+        non-compliant claims.
+      </>
+    ),
+  },
+  {
+    title: 'Engineering foundation',
+    body: (
+      <>
+        A <strong>Computer Science degree (BSCS)</strong> and daily work in{' '}
+        <strong>React 19, Next.js 16, TypeScript, Node.js and PostgreSQL</strong>. That means
+        custom WordPress plugins that replicate GHL funnels natively, WebSockets for real-time
+        chat, and secure role-authenticated client dashboards.
+      </>
+    ),
+  },
+];
+
+const PILLARS = [
+  { ch: 'crm', num: 'CH3', title: 'GoHighLevel Systems', sub: 'Snapshots, funnels & A2P' },
+  { ch: 'ai', num: 'CH1', title: 'n8n & AI Workflows', sub: 'Guarded agents & RAG' },
+  { ch: 'stack', num: 'CH2', title: 'Full Stack SaaS', sub: 'Next.js 16 & custom plugins' },
+];
+
+/* Words light up as the statement passes through the viewport. */
+const useScrollLit = (ref) => {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    const words = [...el.querySelectorAll('.lit-word')];
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      words.forEach((w) => w.classList.add('is-lit'));
+      return undefined;
+    }
+    let raf = 0;
+    let last = -1;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 0 when the block's top hits 85% of the viewport, 1 when its bottom reaches 45%
+      const p = Math.min(1, Math.max(0, (vh * 0.85 - r.top) / (r.height + vh * 0.4)));
+      const n = Math.round(p * words.length);
+      if (n === last) return;
+      last = n;
+      words.forEach((w, i) => w.classList.toggle('is-lit', i < n));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+    };
+  }, [ref]);
+};
 
 const About = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-  const { ref: imageTiltRef, onMouseMove: onImageTiltMove, onMouseLeave: onImageTiltLeave } = useTilt({ maxTilt: 6, perspective: 1200, scale: 1.02 });
+  const statementRef = useRef(null);
+  const captureRef = useRef(null);
+  useScrollLit(statementRef);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    const el = sectionRef.current;
-    if (el) observer.observe(el);
-    return () => {
-      if (el) observer.unobserve(el);
-    };
-  }, []);
+  const onProbe = (e) => {
+    const el = captureRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    el.style.setProperty('--px', `${(x * 100).toFixed(2)}%`);
+    el.style.setProperty('--py', `${(y * 100).toFixed(2)}%`);
+    el.dataset.readout = `X ${(x * 10).toFixed(2)}  Y ${((0.5 - y) * 8).toFixed(2)}`;
+  };
 
   return (
-    <section id="about" className="about" ref={sectionRef}>
-      <div className="about-container">
-        {/* LEFT SIDE: Interactive Image */}
-        <div
-          ref={imageTiltRef}
-          onMouseMove={onImageTiltMove}
-          onMouseLeave={onImageTiltLeave}
-          className={`about-image-container ${isVisible ? "show" : "hidden-left"}`}
-        >
-          <img src={aboutImage} alt="About Aroosha" className="about-img" />
-          <div className="about-blob"></div>
+    <section id="about" className="section about" aria-labelledby="about-title">
+      <div className="wrap">
+        <div className="section-head">
+          <h2 id="about-title" className="section-title" data-reveal="sweep">
+            Checked on <em>live data</em>
+          </h2>
+          <p className="section-intro" data-reveal style={{ '--d': '120ms' }}>
+            I'm Aroosha, a CRM automation engineer and full-stack developer with hands-on
+            production experience designing, building and deploying the systems businesses run on.
+          </p>
         </div>
 
-        {/* RIGHT SIDE: Text Content with interactive highlights */}
-        <div className={`about-content ${isVisible ? "show" : "hidden-right"}`}>
-          <div className="about-header-wrap">
-            <h2 className="section-title">About Me</h2>
-          </div>
+        <p ref={statementRef} className="about-statement">
+          {STATEMENT.split(' ').map((w, i) => (
+            <span key={`${w}${i}`} className={`lit-word ${/1,217|OAuth2|price\./.test(w) ? 'is-key' : ''}`}>
+              {w}{' '}
+            </span>
+          ))}
+        </p>
 
-          <p className="about-description">
-            I am an <strong className="interactive-keyword">AI Automation Engineer & Full Stack Developer</strong> dedicated to building intelligent business automations and modern web products. My automation work centers on architecting <strong className="interactive-keyword">n8n AI agent workflows</strong>, building <strong className="interactive-keyword">RAG knowledge pipelines</strong> with OpenAI and Supabase/pgvector, and engineering end-to-end <strong className="interactive-keyword">GoHighLevel CRM systems</strong>.
-          </p>
-
-          <p className="about-description">
-            What powers my automation work is a strong <strong className="interactive-keyword">full-stack engineering foundation</strong>. Because I work directly with <strong className="interactive-keyword">React, Next.js, Node.js, TypeScript, and PostgreSQL</strong>, I go beyond basic no-code tools — writing custom backend logic, integrating REST APIs, implementing OAuth 2.0 and WebSockets, and building deterministic fallback layers to ensure reliable execution.
-          </p>
-
-          <p className="about-description">
-            Whether developing multi-agent conversational booking flows or full-stack SaaS platforms like <strong className="interactive-keyword">Adapt AI NewsPower</strong> and <strong className="interactive-keyword">Elio</strong>, I focus on transforming real-world business requirements into robust, production-grade solutions.
-          </p>
-
-          {/* Interactive Core Pillars */}
-          <div className="about-pillars">
-            <div className="pillar-item">
-              <FaRobot className="pillar-icon" />
-              <div>
-                <span className="pillar-title">AI Automations</span>
-                <span className="pillar-sub">n8n Agents & RAG</span>
-              </div>
+        <div className="about-grid">
+          <figure className="about-figure" data-reveal="focus">
+            <div
+              ref={captureRef}
+              className="capture ticks about-capture"
+              data-ch="ai"
+              onPointerMove={onProbe}
+              data-readout="X 5.00  Y 0.00"
+            >
+              <img src={aboutImage} alt="Illustration of Aroosha at her desk" width="500" height="500" loading="lazy" />
+              <span className="about-cursor about-cursor-x" aria-hidden="true" />
+              <span className="about-cursor about-cursor-y" aria-hidden="true" />
             </div>
-            <div className="pillar-item">
-              <FaLayerGroup className="pillar-icon" />
-              <div>
-                <span className="pillar-title">Full Stack SaaS</span>
-                <span className="pillar-sub">Next.js & PostgreSQL</span>
+            <figcaption className="readout about-figcap">
+              <span>Probe · move to measure</span>
+              <span>BSCS · Lahore</span>
+            </figcaption>
+          </figure>
+
+          <div className="about-body">
+            {BLOCKS.map((b, i) => (
+              <div key={b.title} className="about-block" data-reveal style={{ '--d': `${i * 90}ms` }}>
+                <h3 className="about-block-title">{b.title}</h3>
+                <p>{b.body}</p>
               </div>
-            </div>
-            <div className="pillar-item">
-              <FaBolt className="pillar-icon" />
-              <div>
-                <span className="pillar-title">CRM Workflows</span>
-                <span className="pillar-sub">GoHighLevel & APIs</span>
-              </div>
-            </div>
+            ))}
+
+            <ul className="about-pillars" aria-label="Core focus areas">
+              {PILLARS.map((p, i) => (
+                <li key={p.title} data-ch={p.ch} data-reveal style={{ '--d': `${200 + i * 80}ms` }}>
+                  <span className="ch-badge">
+                    <span className="ch-num">{p.num}</span>
+                  </span>
+                  <span className="about-pillar-title">{p.title}</span>
+                  <span className="about-pillar-sub">{p.sub}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>

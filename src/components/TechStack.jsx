@@ -1,139 +1,163 @@
-import React, { useEffect, useState, useRef } from 'react';
-import './TechStack.css';
+import { useEffect, useRef, useState } from 'react';
 import {
-    FaRobot, FaBrain, FaCogs, FaCalendarAlt, FaDatabase, FaStripe,
-    FaGoogleDrive, FaExchangeAlt, FaReact,
-    FaKey, FaFileContract, FaSearch, FaProjectDiagram, FaBolt
+  FaRobot, FaBrain, FaCogs, FaCalendarAlt, FaStripe, FaExchangeAlt, FaReact,
+  FaKey, FaFileContract, FaProjectDiagram, FaWordpress,
 } from 'react-icons/fa';
 import {
-    SiTypescript, SiJavascript, SiNextdotjs, SiNodedotjs,
-    SiPostgresql, SiSupabase, SiOpenai, SiN8N
+  SiTypescript, SiJavascript, SiNextdotjs, SiNodedotjs,
+  SiPostgresql, SiSupabase, SiOpenai, SiN8N, SiElementor, SiWoocommerce,
 } from 'react-icons/si';
-import { useTilt } from '../hooks/useTilt';
+import './TechStack.css';
 
-// Category Card with 3D Tilt & Specular Reflection
-const TechCategoryCard = ({ category, index }) => {
-    const { ref, onMouseMove, onMouseLeave } = useTilt({ maxTilt: 5, perspective: 1000, scale: 1.02 });
+const LANES = [
+  {
+    ch: 'ai', num: 'CH1', title: 'AI & Automation', bus: 'Agent bus',
+    tools: [
+      { name: 'n8n (Cloud & Node)', Icon: SiN8N },
+      { name: 'AI Agent Design', Icon: FaRobot },
+      { name: 'OpenAI GPT-4o', Icon: SiOpenai },
+      { name: 'RAG Architecture', Icon: FaBrain },
+      { name: 'Policy & Output Guards', Icon: FaProjectDiagram },
+      { name: 'GoHighLevel Workflows', Icon: FaCogs },
+    ],
+  },
+  {
+    ch: 'stack', num: 'CH2', title: 'Full Stack', bus: 'App & data bus',
+    tools: [
+      { name: 'Next.js 16 (App Router)', Icon: SiNextdotjs },
+      { name: 'React 19', Icon: FaReact },
+      { name: 'TypeScript', Icon: SiTypescript },
+      { name: 'Node.js & Fastify', Icon: SiNodedotjs },
+      { name: 'JavaScript (ES6+)', Icon: SiJavascript },
+      { name: 'React Native (Mobile)', Icon: FaReact },
+      { name: 'PostgreSQL', Icon: SiPostgresql },
+      { name: 'Supabase (pgvector)', Icon: SiSupabase },
+    ],
+  },
+  {
+    ch: 'crm', num: 'CH3', title: 'CRM & GoHighLevel', bus: 'Sync bus',
+    tools: [
+      { name: 'GoHighLevel (GHL)', Icon: FaCogs },
+      { name: 'Salesforce REST API', Icon: FaExchangeAlt },
+      { name: 'OAuth 2.0 / PKCE', Icon: FaKey },
+      { name: 'Webhooks & Relays', Icon: FaExchangeAlt },
+      { name: 'A2P 10DLC & Email DNS', Icon: FaFileContract },
+      { name: 'Square & Stripe Billing', Icon: FaStripe },
+      { name: 'Google Calendar API', Icon: FaCalendarAlt },
+    ],
+  },
+  {
+    ch: 'web', num: 'CH4', title: 'Web & WordPress', bus: 'Web bus',
+    tools: [
+      { name: 'WordPress (Custom Plugins)', Icon: FaWordpress },
+      { name: 'Elementor Pro', Icon: SiElementor },
+      { name: 'WooCommerce', Icon: SiWoocommerce },
+    ],
+  },
+];
 
-    return (
-        <div
-            ref={ref}
-            onMouseMove={onMouseMove}
-            onMouseLeave={onMouseLeave}
-            className="tech-category-card"
-            style={{ animationDelay: `${index * 0.12}s` }}
-        >
-            <div className="card-glare" />
-            <h3 className="category-title">
-                <span>{category.title}</span>
-                {category.title === "AI & Automation" && <span className="ai-active-pulse" />}
-            </h3>
-            <div className="tools-list">
-                {category.tools.map((tool, idx) => (
-                    <div key={idx} className="tool-item">
-                        <div className="icon-wrapper">
-                            {tool.icon}
-                        </div>
-                        <span className="tool-name">{tool.name}</span>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+/* A digital waveform drawn once per lane: deterministic pulse widths. */
+const pulsePath = (seed) => {
+  let d = 'M0 18';
+  let x = 0;
+  let high = false;
+  let s = seed;
+  while (x < 1200) {
+    s = (s * 9301 + 49297) % 233280;
+    const wdt = 14 + (s / 233280) * 46;
+    x += wdt;
+    high = !high;
+    d += ` H${x.toFixed(1)} V${high ? 4 : 18}`;
+  }
+  return d;
 };
 
 const TechStack = () => {
-    const [isVisible, setIsVisible] = useState(false);
-    const sectionRef = useRef(null);
+  const sectionRef = useRef(null);
+  const [focus, setFocus] = useState(null);
 
-    const techCategories = [
-        {
-            title: "AI & Automation",
-            tools: [
-                { name: "n8n", icon: <SiN8N className="tech-icon n8n" /> },
-                { name: "AI Agents", icon: <FaRobot className="tech-icon ai-agent" /> },
-                { name: "LLMs / OpenAI", icon: <SiOpenai className="tech-icon openai" /> },
-                { name: "RAG Architecture", icon: <FaBrain className="tech-icon rag" /> },
-                { name: "Prompt Eng.", icon: <FaProjectDiagram className="tech-icon prompt" /> },
-                { name: "GoHighLevel", icon: <FaCogs className="tech-icon ghl" /> },
-            ]
-        },
-        {
-            title: "Full Stack",
-            tools: [
-                { name: "React", icon: <FaReact className="tech-icon react" /> },
-                { name: "Next.js", icon: <SiNextdotjs className="tech-icon next" /> },
-                { name: "Node.js", icon: <SiNodedotjs className="tech-icon node" /> },
-                { name: "TypeScript", icon: <SiTypescript className="tech-icon ts" /> },
-                { name: "JavaScript", icon: <SiJavascript className="tech-icon js" /> },
-                { name: "React Native", icon: <FaReact className="tech-icon react" /> },
-            ]
-        },
-        {
-            title: "APIs & Backend",
-            tools: [
-                { name: "REST APIs", icon: <FaExchangeAlt className="tech-icon api" /> },
-                { name: "OAuth 2.0 / HMAC", icon: <FaKey className="tech-icon auth" /> },
-                { name: "PostgreSQL", icon: <SiPostgresql className="tech-icon pg" /> },
-                { name: "Supabase", icon: <SiSupabase className="tech-icon supabase" /> },
-                { name: "pgvector", icon: <FaDatabase className="tech-icon vector" /> },
-                { name: "WebSockets", icon: <FaBolt className="tech-icon ws" /> },
-            ]
-        },
-        {
-            title: "Integrations & Workflows",
-            tools: [
-                { name: "Google Calendar", icon: <FaCalendarAlt className="tech-icon gcal" /> },
-                { name: "Google Drive", icon: <FaGoogleDrive className="tech-icon gdrive" /> },
-                { name: "Apify / Zillow", icon: <FaSearch className="tech-icon search" /> },
-                { name: "Square", icon: <FaExchangeAlt className="tech-icon square" /> },
-                { name: "BoldSign", icon: <FaFileContract className="tech-icon contract" /> },
-                { name: "Stripe", icon: <FaStripe className="tech-icon stripe" /> },
-            ]
-        }
-    ];
+  // Scroll moves the timebase: lanes drift in alternating directions.
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const p = (vh - r.top) / (vh + r.height); // 0..1 across the pass
+      el.style.setProperty('--scan', Math.min(1, Math.max(0, p)).toFixed(4));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+    };
+  }, []);
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) {
-                    setIsVisible(true);
-                    observer.disconnect();
-                }
-            },
-            { threshold: 0.1 }
-        );
+  return (
+    <section
+      id="tech-stack"
+      ref={sectionRef}
+      className="section tech"
+      aria-labelledby="tech-title"
+    >
+      <div className="wrap">
+        <div className="section-head">
+          <h2 id="tech-title" className="section-title" data-reveal="sweep">
+            Tools on <em>the bus</em>
+          </h2>
+          <p className="section-intro" data-reveal style={{ '--d': '120ms' }}>
+            The tools and frameworks I use across production environments, decoded by channel.
+            Hover a lane to isolate it.
+          </p>
+        </div>
 
-        const el = sectionRef.current;
-        if (el) observer.observe(el);
-
-        return () => {
-            if (el) observer.unobserve(el);
-        };
-    }, []);
-
-    return (
-        <section id="tech-stack" className="tech-stack" ref={sectionRef}>
-            <div className={`tech-container ${isVisible ? 'animate-in' : ''}`}>
-
-                <div className="section-header">
-                    <h2 className="section-title">Tools & Technologies</h2>
-                    <p className="section-subtitle">My Technical Stack</p>
-                </div>
-
-                <div className="tech-grid">
-                    {techCategories.map((category, index) => (
-                        <TechCategoryCard 
-                            key={index} 
-                            category={category} 
-                            index={index} 
-                        />
-                    ))}
-                </div>
-
+        <div className="lanes ticks" onMouseLeave={() => setFocus(null)}>
+          <div className="lanes-ruler readout" aria-hidden="true">
+            {Array.from({ length: 11 }, (_, i) => (
+              <span key={i}>{`${i * 10}`}</span>
+            ))}
+          </div>
+          {LANES.map((lane, li) => (
+            <div
+              key={lane.ch}
+              data-ch={lane.ch}
+              className={`lane ${focus === lane.ch ? 'is-focus' : ''} ${focus && focus !== lane.ch ? 'is-dim' : ''}`}
+              onMouseEnter={() => setFocus(lane.ch)}
+              data-reveal
+              style={{ '--d': `${li * 90}ms`, '--dir': li % 2 ? 1 : -1 }}
+            >
+              <div className="lane-head">
+                <span className="ch-badge">
+                  <span className="ch-num">{lane.num}</span>
+                  {lane.bus}
+                </span>
+                <h3 className="lane-title">{lane.title}</h3>
+              </div>
+              <div className="lane-track">
+                <svg className="lane-wave" viewBox="0 0 1200 22" preserveAspectRatio="none" aria-hidden="true">
+                  <path d={pulsePath(li * 7 + 3)} />
+                </svg>
+                <ul className="lane-decode">
+                  {lane.tools.map((tool) => (
+                    <li key={tool.name} className="decode">
+                      <tool.Icon className="decode-icon" aria-hidden="true" />
+                      <span>{tool.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-        </section>
-    );
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default TechStack;

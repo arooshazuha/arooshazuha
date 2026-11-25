@@ -1,128 +1,150 @@
-import React, { useState, useEffect } from "react";
-import { FaArrowRight, FaPaperPlane, FaRobot, FaLayerGroup } from "react-icons/fa";
-import { useMagnetic } from "../hooks/useMagnetic";
-import { useTilt } from "../hooks/useTilt";
-import "./Hero.css";
-import heroImage from "../assets/hero-img.png";
+import { useState } from 'react';
+import { FaArrowRight } from 'react-icons/fa';
+import ScopeCanvas from './ScopeCanvas';
+import { useMagnetic } from '../hooks/useMagnetic';
+import heroImage from '../assets/opt/hero-img.webp';
+import './Hero.css';
 
-const ROLES = [
-  "AI Automation Engineer",
-  "Full Stack Developer",
-  "n8n & AI Agent Specialist",
-  "SaaS & Web Developer",
+const CHANNELS = [
+  { id: 'ai', num: 'CH1', label: 'AI & Automation', detail: 'n8n agents · RAG · OpenAI' },
+  { id: 'stack', num: 'CH2', label: 'Full Stack', detail: 'Next.js · React · Node · Postgres' },
+  { id: 'crm', num: 'CH3', label: 'CRM & GoHighLevel', detail: 'GoHighLevel · Salesforce · A2P' },
+  { id: 'web', num: 'CH4', label: 'Web & WordPress', detail: 'Custom plugins · WooCommerce' },
 ];
 
+const MEASUREMENTS = [
+  { label: 'AI SMS & web assistant', value: '78', unit: 'nodes' },
+  { label: 'n8n workflows in production', value: '12+', unit: 'flows' },
+  { label: 'GHL sub-accounts administered', value: '16+', unit: 'accts' },
+  { label: 'Mis-tagged contacts reversed, 0 errors', value: '1,217', unit: 'contacts' },
+];
+
+const splitLetters = (word, offset = 0) =>
+  [...word].map((ch, i) => (
+    <span key={`${ch}${i}`} className="hero-letter" style={{ '--li': i + offset }} aria-hidden="true">
+      {ch}
+    </span>
+  ));
+
 const Hero = () => {
-  const [text, setText] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [loopNum, setLoopNum] = useState(0);
-  const [typingSpeed, setTypingSpeed] = useState(150);
-
-  const { ref: primaryBtnRef, onMouseMove: onPrimaryMove, onMouseLeave: onPrimaryLeave } = useMagnetic(0.28);
-  const { ref: outlineBtnRef, onMouseMove: onOutlineMove, onMouseLeave: onOutlineLeave } = useMagnetic(0.28);
-  const { ref: imageTiltRef, onMouseMove: onImageTiltMove, onMouseLeave: onImageTiltLeave } = useTilt({ maxTilt: 6, perspective: 1200, scale: 1.02 });
-
-  useEffect(() => {
-    const handleTyping = () => {
-      const i = loopNum % ROLES.length;
-      const fullText = ROLES[i];
-
-      setText(
-        isDeleting
-          ? fullText.substring(0, text.length - 1)
-          : fullText.substring(0, text.length + 1),
-      );
-
-      // Speed adjustments
-      setTypingSpeed(isDeleting ? 30 : 150);
-
-      if (!isDeleting && text === fullText) {
-        setTimeout(() => setIsDeleting(true), 2000); // Pause at end of word
-      } else if (isDeleting && text === "") {
-        setIsDeleting(false);
-        setLoopNum(loopNum + 1);
-      }
-    };
-
-    const timer = setTimeout(handleTyping, typingSpeed);
-    return () => clearTimeout(timer);
-  }, [text, isDeleting, loopNum, typingSpeed]);
+  const [hover, setHover] = useState(null);
+  const [locked, setLocked] = useState(null);
+  const focus = hover ?? locked;
+  const { ref: primaryRef, onMouseMove: primaryMove, onMouseLeave: primaryLeave } = useMagnetic(0.22);
+  const { ref: secondaryRef, onMouseMove: secondaryMove, onMouseLeave: secondaryLeave } = useMagnetic(0.22);
 
   return (
-    <section id="home" className="hero">
-      <div className="hero-container">
-        {/* Left Side: Text Content */}
-        <div className="hero-content">
-          <div className="badge">
-            <span className="badge-pulse-dot" />
-            <span>Welcome to my Portfolio</span>
-          </div>
+    <section id="home" className="hero" aria-labelledby="hero-title">
+      <div className="hero-screen">
+        <ScopeCanvas focus={focus} className="hero-canvas" />
+      </div>
 
-          <h1 className="hero-title">
-            Hey, I'm <span className="highlight">Aroosha Zuha</span>
-          </h1>
-
-          <h2 className="typewriter">
-            I am a <span className="role-text">{text}</span>
-            <span className="cursor">|</span>
-          </h2>
-
-          <p className="hero-description">
-            Building AI-powered business automations, intelligent agents, CRM workflows,
-            API integrations, SaaS applications, and full-stack web/mobile products.
-          </p>
-
-          <div className="hero-buttons">
-            <a 
-              ref={primaryBtnRef}
-              onMouseMove={onPrimaryMove}
-              onMouseLeave={onPrimaryLeave}
-              href="#projects" 
-              className="btn btn-primary magnetic-btn"
+      <div className="hero-inner wrap">
+        <div className="hero-channels" role="group" aria-label="Isolate a channel">
+          {CHANNELS.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              data-ch={c.id}
+              className={`hero-ch ${focus === c.id ? 'is-focus' : ''} ${focus && focus !== c.id ? 'is-dim' : ''}`}
+              aria-pressed={locked === c.id}
+              onMouseEnter={() => setHover(c.id)}
+              onMouseLeave={() => setHover(null)}
+              onFocus={() => setHover(c.id)}
+              onBlur={() => setHover(null)}
+              onClick={() => setLocked((v) => (v === c.id ? null : c.id))}
             >
-              <span>My Work</span>
-              <FaArrowRight className="btn-inline-icon" />
-            </a>
-            <a 
-              ref={outlineBtnRef}
-              onMouseMove={onOutlineMove}
-              onMouseLeave={onOutlineLeave}
-              href="#contact" 
-              className="btn btn-outline magnetic-btn"
-            >
-              <span>Let's Connect</span>
-              <FaPaperPlane className="btn-inline-icon" />
-            </a>
-          </div>
+              <span className="ch-badge">
+                <span className="ch-num">{c.num}</span>
+                {c.label}
+              </span>
+              <span className="hero-ch-detail">{c.detail}</span>
+            </button>
+          ))}
         </div>
 
-        {/* Right Side: Interactive Illustration with Depth & Floating Chips */}
-        <div 
-          ref={imageTiltRef}
-          onMouseMove={onImageTiltMove}
-          onMouseLeave={onImageTiltLeave}
-          className="hero-image-container"
-        >
-          <img
-            src={heroImage}
-            alt="Aroosha Zuha Illustration"
-            className="hero-img"
-          />
+        <div className="hero-grid">
+          <div className="hero-copy">
+            <h1 id="hero-title" className="hero-title">
+              <span className="sr-only">Aroosha Zuha, AI Automation Engineer and Full Stack Developer</span>
+              <span className="hero-name">
+                <span className="hero-line">{splitLetters('Aroosha')}</span>
+                <span className="hero-line">{splitLetters('Zuha', 7)}</span>
+              </span>
+              <span className="hero-role" aria-hidden="true">
+                <span className="hero-role-ch" data-ch="ai">AI Automation Engineer</span>
+                <span className="hero-role-amp">&amp;</span>
+                <span className="hero-role-ch" data-ch="stack">Full Stack Developer</span>
+              </span>
+            </h1>
 
-          {/* Interactive Floating Micro Chips */}
-          <div className="floating-chip chip-top-left">
-            <FaRobot className="chip-icon ai" />
-            <span>n8n & AI Agents</span>
+            <p className="hero-lead">
+              I build AI agents, CRM automations and full-stack web apps that connect a business's
+              website, CRM, payments, APIs and AI chat assistants. Then I check every one against
+              live data, not a green banner.
+            </p>
+
+            <div className="hero-actions">
+              <a
+                ref={primaryRef}
+                onMouseMove={primaryMove}
+                onMouseLeave={primaryLeave}
+                href="#contact"
+                className="key key-run"
+              >
+                <span className="key-led" aria-hidden="true" />
+                Get in touch
+                <FaArrowRight aria-hidden="true" />
+              </a>
+              <a
+                ref={secondaryRef}
+                onMouseMove={secondaryMove}
+                onMouseLeave={secondaryLeave}
+                href="#projects"
+                className="key key-soft"
+              >
+                See the work
+              </a>
+            </div>
+            <p className="hero-avail">
+              <span className="hero-avail-led" aria-hidden="true" />
+              Available for US &amp; UK time zone roles and client projects
+            </p>
           </div>
 
-          <div className="floating-chip chip-bottom-right">
-            <FaLayerGroup className="chip-icon dev" />
-            <span>Full-Stack SaaS</span>
-          </div>
-
-          {/* Decorative background glow circle */}
-          <div className="hero-blob"></div>
+          <figure className="hero-capture">
+            <div className="capture ticks" data-ch={focus ?? 'stack'}>
+              <img src={heroImage} alt="Illustration of Aroosha working at a laptop" width="500" height="500" fetchPriority="high" />
+            </div>
+            <figcaption className="hero-capture-meta readout">
+              <span>Zoom ×2.0</span>
+              <span>Lahore, PK</span>
+            </figcaption>
+          </figure>
         </div>
+      </div>
+
+      <div className="hero-measure">
+        <dl className="hero-measure-row wrap">
+          {MEASUREMENTS.map((m) => (
+            <div key={m.label} className="hero-measure-cell">
+              <dt className="readout">{m.label}</dt>
+              <dd>
+                <span className="hero-measure-value">{m.value}</span>
+                <span className="readout">{m.unit}</span>
+              </dd>
+            </div>
+          ))}
+          <div className="hero-measure-cell hero-scroll">
+            <dt className="sr-only">Scroll</dt>
+            <dd>
+              <a href="#about" className="hero-scroll-link">
+                <span className="readout">Scroll</span>
+                <span className="hero-scroll-trace" aria-hidden="true" />
+              </a>
+            </dd>
+          </div>
+        </dl>
       </div>
     </section>
   );

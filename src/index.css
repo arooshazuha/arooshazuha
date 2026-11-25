@@ -1,196 +1,572 @@
+/* ==========================================================================
+   Signal Analyzer — global tokens, base, shared primitives
+   ========================================================================== */
+
 :root {
-  --bg-dark: #210635;
-  /* Deepest purple for main background */
-  --bg-surface: #420d4b;
-  /* Lighter purple for navbars/cards */
-  --primary: #7b337e;
-  /* Middle purple for buttons/accents */
-  --secondary: #6667ab;
-  /* Periwinkle for hovers/secondary items */
-  --text-light: #f5d5e0;
-  /* Pale pink for text */
-  --font-main: "Outfit", sans-serif;
+  /* Ground and surfaces: near-black instrument glass */
+  --ink-0: #07090c;
+  --ink-1: #0b0f14;
+  --ink-2: #10151c;
+  --ink-3: #161d26;
+
+  /* Hairlines and graticule */
+  --line: rgba(150, 172, 198, 0.13);
+  --line-strong: rgba(150, 172, 198, 0.28);
+  --grat: rgba(140, 165, 190, 0.055);
+  --grat-major: rgba(140, 165, 190, 0.09);
+
+  /* Text */
+  --fg: #e9edf2;
+  --fg-2: #a9b3c0;
+  --fg-3: #7d8999;
+
+  /* Channels: fixed meanings, never decoration */
+  --ch1: #f2d64b; /* AI & Automation */
+  --ch2: #36e2e6; /* Full Stack */
+  --ch3: #ff4fa3; /* GoHighLevel & CRM */
+  --ch4: #7d93ff; /* Web & WordPress */
+  --run: #3ef08a; /* live status LEDs only */
+
+  --ch1-rgb: 242, 214, 75;
+  --ch2-rgb: 54, 226, 230;
+  --ch3-rgb: 255, 79, 163;
+  --ch4-rgb: 125, 147, 255;
+
+  /* Type */
+  --f-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "Martian Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --t-display: clamp(3.4rem, min(10.5vw, 15.5vh), 9.5rem);
+  --t-h2: clamp(2.6rem, 6.2vw, 5.4rem);
+  --t-h3: clamp(1.45rem, 2.4vw, 2rem);
+  --t-lead: clamp(1.15rem, 1.6vw, 1.4rem);
+  --t-body: 1.0625rem;
+  --t-small: 0.9375rem;
+  --t-mono: 0.75rem;
+  --t-micro: 0.6875rem;
+
+  /* Space */
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --maxw: 1320px;
+  --section-y: clamp(6rem, 12vw, 10.5rem);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 180ms;
+  --dur-2: 420ms;
+  --dur-3: 900ms;
+
+  --nav-h: 64px;
+
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-h) + 12px);
+  -webkit-text-size-adjust: 100%;
+  background: var(--ink-0);
+  color-scheme: dark;
 }
 
 body {
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  background-color: var(--bg-dark);
-  color: var(--text-light);
-  font-family: var(--font-main);
-  overflow-x: hidden;
+  min-height: 100dvh;
+  background: var(--ink-0);
+  color: var(--fg);
+  font-family: var(--f-sans);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  font-stretch: 100%;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
 }
 
-*, *::before, *::after {
-  box-sizing: inherit;
+body.menu-locked {
+  overflow: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 a {
+  color: inherit;
   text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
   color: inherit;
 }
 
-ul {
-  list-style: none;
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
   padding: 0;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
   margin: 0;
 }
 
-/* Accessibility Focus States */
-a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
-  outline: 2px solid #00f3ff;
-  outline-offset: 3px;
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
-/* Scrollbar for Chrome, Edge, Safari */
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: var(--ch1);
+  color: #0a0a0a;
+}
+
+input,
+textarea {
+  caret-color: var(--ch2);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ch2);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Scrollbar: a thin cursor rail */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) var(--ink-0);
+}
+
 ::-webkit-scrollbar {
-  width: 9px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-dark);
+  background: var(--ink-0);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(102, 103, 171, 0.6);
+  background: #2a3441;
+  border: 3px solid var(--ink-0);
   border-radius: 6px;
-  border: 2px solid var(--bg-dark);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00f3ff;
+  background: var(--ch2);
 }
 
-/* Container for the background effects */
-.background-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  overflow: hidden;
-  background-color: var(--bg-dark);
-  background-image: url("./assets/tech-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-/* Overlay to ensure high contrast and text readability */
-.background-container::after {
-  content: "";
+.skip-link {
   position: absolute;
-  top: 0;
-  left: 0;
+  left: 1rem;
+  top: -100px;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  background: var(--ch1);
+  color: #0a0a0a;
+  font-family: var(--f-mono);
+  font-size: var(--t-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.skip-link:focus {
+  top: calc(1rem + var(--sat));
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Instrument ground: plain glass. Graticules live only on measurement
+   surfaces (hero scope, spectrum screen, capture frames).
+   -------------------------------------------------------------------------- */
+
+.scope-ground {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(90% 60% at 50% -10%, rgba(54, 226, 230, 0.035), transparent 70%),
+    var(--ink-0);
+}
+
+/* --------------------------------------------------------------------------
+   Layout primitives
+   -------------------------------------------------------------------------- */
+
+.wrap {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.section {
+  position: relative;
+  padding-block: var(--section-y);
+}
+
+.section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: end;
+  gap: clamp(1.5rem, 4vw, 4rem);
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.section-title {
+  font-size: var(--t-h2);
+  font-stretch: 68%;
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.section-title em {
+  font-style: normal;
+  color: var(--fg-2);
+}
+
+.section-intro {
+  color: var(--fg-2);
+  font-size: var(--t-lead);
+  line-height: 1.5;
+  max-width: 46ch;
+  padding-bottom: 0.4rem;
+}
+
+@media (max-width: 860px) {
+  .section-head {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Instrument chrome
+   -------------------------------------------------------------------------- */
+
+/* Corner ticks, like the bezel marks around a scope screen */
+.ticks {
+  --tick: var(--line-strong);
+  --tl: 12px;
+  background-image:
+    linear-gradient(var(--tick), var(--tick)),
+    linear-gradient(var(--tick), var(--tick)),
+    linear-gradient(var(--tick), var(--tick)),
+    linear-gradient(var(--tick), var(--tick)),
+    linear-gradient(var(--tick), var(--tick)),
+    linear-gradient(var(--tick), var(--tick)),
+    linear-gradient(var(--tick), var(--tick)),
+    linear-gradient(var(--tick), var(--tick));
+  background-repeat: no-repeat;
+  background-size:
+    var(--tl) 1px, 1px var(--tl),
+    var(--tl) 1px, 1px var(--tl),
+    var(--tl) 1px, 1px var(--tl),
+    var(--tl) 1px, 1px var(--tl);
+  background-position:
+    top left, top left,
+    top right, top right,
+    bottom left, bottom left,
+    bottom right, bottom right;
+}
+
+/* Readout text: measurement data only */
+.readout {
+  font-family: var(--f-mono);
+  font-size: var(--t-mono);
+  font-stretch: 87.5%;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+/* Channel badge: [ CH1 ] label */
+.ch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--f-mono);
+  font-size: var(--t-micro);
+  font-stretch: 87.5%;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  white-space: nowrap;
+}
+
+.ch-badge .ch-num {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.6rem;
+  padding: 0.2rem 0.4rem;
+  background: var(--c, var(--ch1));
+  color: #08090b;
+  font-weight: 600;
+  border-radius: 2px;
+}
+
+[data-ch="ai"] { --c: var(--ch1); --c-rgb: var(--ch1-rgb); }
+[data-ch="stack"] { --c: var(--ch2); --c-rgb: var(--ch2-rgb); }
+[data-ch="crm"] { --c: var(--ch3); --c-rgb: var(--ch3-rgb); }
+[data-ch="web"] { --c: var(--ch4); --c-rgb: var(--ch4-rgb); }
+
+/* --------------------------------------------------------------------------
+   Keys (buttons)
+   -------------------------------------------------------------------------- */
+
+.key {
+  --c: var(--ch1);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 52px;
+  padding: 0 1.5rem;
+  font-family: var(--f-sans);
+  font-size: 0.9375rem;
+  font-weight: 650;
+  font-stretch: 100%;
+  letter-spacing: 0.01em;
+  border-radius: 3px;
+  transition:
+    background-color var(--dur-1) ease,
+    border-color var(--dur-1) ease,
+    color var(--dur-1) ease,
+    box-shadow var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+  will-change: transform;
+}
+
+.key svg {
+  transition: transform var(--dur-2) var(--ease-out);
+}
+
+.key:hover svg {
+  transform: translateX(4px);
+}
+
+.key-run {
+  background: var(--c);
+  color: #0a0b0c;
+  box-shadow: 0 10px 30px -12px rgba(var(--ch1-rgb), 0.55);
+}
+
+.key-run:hover {
+  background: #fff07a;
+  box-shadow: 0 16px 40px -14px rgba(var(--ch1-rgb), 0.75);
+}
+
+.key-run:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.key-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0a0b0c;
+  box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, 0.4);
+  animation: led 1.6s steps(2, jump-none) infinite;
+}
+
+@keyframes led {
+  0% { opacity: 1; }
+  100% { opacity: 0.25; }
+}
+
+.key-soft {
+  color: var(--fg);
+  border: 1px solid var(--line-strong);
+  background: rgba(16, 21, 28, 0.6);
+}
+
+.key-soft:hover {
+  border-color: var(--ch2);
+  color: #fff;
+  background: rgba(var(--ch2-rgb), 0.08);
+}
+
+.key[disabled] {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+/* Inline text link */
+.text-link {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+  transition: text-decoration-color var(--dur-1) ease, color var(--dur-1) ease;
+}
+
+.text-link:hover {
+  color: #fff;
+  text-decoration-color: var(--ch2);
+}
+
+/* --------------------------------------------------------------------------
+   Phosphor capture: the illustrations rendered as tinted scope captures
+   -------------------------------------------------------------------------- */
+
+.capture {
+  position: relative;
+  isolation: isolate;
+  border: 1px solid var(--line);
+  background: radial-gradient(70% 70% at 50% 50%, rgba(var(--c-rgb, var(--ch2-rgb)), 0.07), transparent 70%), var(--ink-1);
+  overflow: hidden;
+}
+
+.capture img {
   width: 100%;
   height: 100%;
-  background: rgba(33, 6, 53, 0.88);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  object-fit: contain;
+  filter: grayscale(1) contrast(1.15) brightness(1.05);
+  opacity: 0.88;
+  transition: filter var(--dur-3) var(--ease-out), opacity var(--dur-3) var(--ease-out);
 }
 
-/* Common style for the glowing orbs */
-.glow-orb {
+.capture::after {
+  /* channel tint */
+  content: "";
   position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.45;
-  animation: floatOrb 22s infinite alternate ease-in-out;
-  z-index: 1;
+  inset: 0;
+  background: var(--c, var(--ch2));
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  transition: opacity var(--dur-3) var(--ease-out);
 }
 
-/* Orb 1: Cyan/Tech Blue */
-.orb-1 {
-  width: 55vw;
-  height: 55vw;
-  background: #00f3ff;
-  top: -15%;
-  left: -15%;
-  animation-duration: 25s;
-  opacity: 0.25;
+.capture::before {
+  /* scanlines */
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.22) 0 1px, transparent 1px 3px);
+  opacity: 0.55;
 }
 
-/* Orb 2: Deep Tech Purple */
-.orb-2 {
-  width: 50vw;
-  height: 50vw;
-  background: #bd00ff;
-  bottom: -15%;
-  right: -15%;
-  animation-duration: 32s;
-  animation-delay: -5s;
-  opacity: 0.25;
-}
-
-/* The Floating Animation */
-@keyframes floatOrb {
-  0% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  33% {
-    transform: translate(30px, 50px) scale(1.08);
-  }
-
-  66% {
-    transform: translate(-20px, 20px) scale(0.92);
-  }
-
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-}
-
-/* --- SCROLL TRIGGER UTILITIES --- */
-.hidden-left {
-  opacity: 0;
-  transform: translateX(-50px);
-  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.hidden-right {
-  opacity: 0;
-  transform: translateX(50px);
-  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.hidden-top {
-  opacity: 0;
-  transform: translateY(-35px);
-  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.show {
+.capture:hover img,
+.capture:focus-within img {
+  filter: grayscale(0) contrast(1) brightness(1);
   opacity: 1;
-  transform: translate(0, 0);
-  transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-/* --- ACCESSIBILITY: PREFERS REDUCED MOTION --- */
+.capture:hover::after,
+.capture:focus-within::after {
+  opacity: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Reveal system. Content is visible by default; JS arms the hidden state
+   only when IntersectionObserver exists and motion is allowed.
+   -------------------------------------------------------------------------- */
+
+.reveal-armed [data-reveal] {
+  transition:
+    opacity var(--dur-3) var(--ease-out),
+    transform var(--dur-3) var(--ease-out),
+    -webkit-mask-position 1.1s var(--ease-out),
+    mask-position 1.1s var(--ease-out),
+    filter var(--dur-3) var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+
+.reveal-armed [data-reveal]:not([data-shown]) {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+
+/* Sweep: an acquisition wipe, left to right. A mask (not clip-path) so the
+   element still registers as intersecting while hidden. */
+.reveal-armed [data-reveal="sweep"] {
+  -webkit-mask-image: linear-gradient(90deg, #000 50%, transparent 50%);
+  mask-image: linear-gradient(90deg, #000 50%, transparent 50%);
+  -webkit-mask-size: 200% 100%;
+  mask-size: 200% 100%;
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+}
+
+.reveal-armed [data-reveal="sweep"]:not([data-shown]) {
+  opacity: 1;
+  transform: none;
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+}
+
+.reveal-armed [data-reveal="focus"]:not([data-shown]) {
+  transform: none;
+  filter: blur(10px);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .hidden-left, .hidden-right, .hidden-top {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .glow-orb {
-    animation: none !important;
-  }
-
-  .hero-img, .about-img, .skills-img, .contact-img {
-    animation: none !important;
+    transition-delay: 0ms !important;
   }
 }

@@ -1,147 +1,128 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
+import { FaChevronDown } from 'react-icons/fa';
+import { EXPERIENCE } from '../data/experience';
 import './Experience.css';
-import { FaBriefcase, FaCalendarAlt, FaCheckCircle } from 'react-icons/fa';
-import { useTilt } from '../hooks/useTilt';
 
-// Experience Card with 3D Tilt & Specular Light Reflection
-const ExperienceCard = ({ exp, index, isVisible }) => {
-  const { ref, onMouseMove, onMouseLeave } = useTilt({ maxTilt: 4, perspective: 1200, scale: 1.01 });
+const VISIBLE = 3;
+
+const channelFor = (exp) => {
+  if (exp.isEducation) return 'web';
+  if (/WordPress|E-Commerce/i.test(exp.role)) return 'web';
+  if (/GoHighLevel|CRM/i.test(exp.role)) return 'crm';
+  return 'ai';
+};
+
+const Entry = ({ exp, index }) => {
+  const [open, setOpen] = useState(false);
+  const listId = useId();
+  const extra = exp.highlights.length - VISIBLE;
+  const current = exp.badgeClass === 'badge-current';
 
   return (
-    <div 
-      ref={ref}
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      className={`experience-card ${isVisible ? 'show' : 'hidden-left'}`}
-      style={{ transitionDelay: `${index * 0.2}s` }}
-    >
-      <div className="card-glare" />
-
-      <div className="card-top">
-        <div className="company-info">
-          <div className="company-icon-box">
-            <FaBriefcase className="company-icon" />
-          </div>
-          <div>
-            <h3 className="company-name">{exp.company}</h3>
-            <h4 className="role-title">{exp.role}</h4>
-          </div>
-        </div>
-        <div className="meta-info">
-          <span className={`status-pill ${exp.badgeClass}`}>
-            {exp.badgeClass === 'badge-current' && <span className="current-live-pulse" />}
-            {exp.type}
-          </span>
-          <span className="period">
-            <FaCalendarAlt className="cal-icon" /> {exp.period}
-          </span>
-        </div>
+    <li className="acq" data-ch={channelFor(exp)} data-reveal style={{ '--d': `${index * 60}ms` }}>
+      <div className="acq-when">
+        <span className="acq-period">{exp.period}</span>
+        <span className={`acq-status readout ${current ? 'is-live' : ''}`}>
+          <span className="acq-status-led" aria-hidden="true" />
+          {exp.type}
+        </span>
       </div>
 
-      <p className="exp-description">{exp.description}</p>
+      <div className="acq-trigger" aria-hidden="true">
+        <span className="acq-marker" />
+      </div>
 
-      <div className="highlights-section">
-        <h5>Key Contributions & Responsibilities:</h5>
-        <ul className="highlights-list">
-          {exp.highlights.map((item, idx) => (
-            <li key={idx} className="highlight-item">
-              <FaCheckCircle className="check-bullet" />
-              <span>{item}</span>
+      <article className="acq-body">
+        <header className="acq-head">
+          <h3 className="acq-company">{exp.company}</h3>
+          <p className="acq-role">{exp.role}</p>
+        </header>
+
+        <p className="acq-desc">{exp.description}</p>
+
+        <h4 className="acq-sub">Key contributions</h4>
+        <ul id={listId} className="acq-list">
+          {exp.highlights.map((item, i) => (
+            <li key={item} hidden={!open && i >= VISIBLE} className={i >= VISIBLE ? 'is-extra' : ''}>
+              {item}
             </li>
           ))}
         </ul>
-      </div>
 
-      <div className="exp-tech-tags">
-        {exp.tech.map((t, idx) => (
-          <span key={idx} className="tech-badge">{t}</span>
-        ))}
-      </div>
-    </div>
+        {extra > 0 && (
+          <button
+            type="button"
+            className="acq-more"
+            aria-expanded={open}
+            aria-controls={listId}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? 'Show fewer' : `Show ${extra} more`}
+            <FaChevronDown aria-hidden="true" />
+          </button>
+        )}
+
+        <ul className="acq-tags" aria-label="Technologies">
+          {exp.tech.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+      </article>
+    </li>
   );
 };
 
 const Experience = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const logRef = useRef(null);
 
-  const experiences = [
-    {
-      company: "Kindwell Solutions",
-      role: "AI Automation Engineer",
-      period: "2026 – Present",
-      type: "Current Role",
-      badgeClass: "badge-current",
-      description: "Building AI-powered business automations and full-stack solutions for real-world client projects, combining AI agents, CRM workflows, API integrations, and modern web development.",
-      highlights: [
-        "Built and refined AI agent workflows and business automations using n8n, LLMs, and GoHighLevel.",
-        "Designed and integrated CRM, booking, lead-management, and business process workflows across multiple client systems.",
-        "Worked with REST APIs and third-party integrations to connect different business platforms and automate processes.",
-        "Developed and maintained full-stack web and SaaS functionality using React, Next.js, Node.js, and TypeScript.",
-        "Worked on RAG-based AI systems using n8n, Google Drive, embeddings, Supabase, and pgvector.",
-        "Debugged complex automation and API integration issues, including third-party data/schema changes and scheduling problems.",
-        "Translated business requirements into practical technical solutions, then tested and refined the workflows to improve reliability."
-      ],
-      tech: ["AI Automation", "n8n", "AI Agents", "GoHighLevel", "LLMs", "RAG", "REST APIs", "React", "Next.js", "Node.js", "TypeScript", "Supabase"]
-    },
-    {
-      company: "Florex Pharma",
-      role: "Web Developer",
-      period: "2023 – 2025",
-      type: "Previous Experience",
-      badgeClass: "badge-previous",
-      description: "Developed and maintained full-scale e-commerce and digital web platforms for pharmaceutical products.",
-      highlights: [
-        "Built and maintained responsive e-commerce web applications using WordPress, WooCommerce, and custom themes.",
-        "Integrated secure API payment gateways and optimized checkout flows for customer conversions.",
-        "Managed performance optimization, database maintenance, regular security audits, and automated backup routines.",
-        "Handled custom script troubleshooting, plugin compatibility, and cross-browser testing."
-      ],
-      tech: ["WordPress", "WooCommerce", "PHP", "JavaScript", "HTML5 / CSS3", "Payment Gateways", "Performance Optimization"]
-    }
-  ];
-
+  // The trace down the log fills with scroll; markers light as it passes.
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    const el = sectionRef.current;
-    if (el) observer.observe(el);
+    const el = logRef.current;
+    if (!el) return undefined;
+    const markers = [...el.querySelectorAll('.acq')];
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const probe = window.innerHeight * 0.55;
+      const p = Math.min(1, Math.max(0, (probe - r.top) / r.height));
+      el.style.setProperty('--fill', p.toFixed(4));
+      markers.forEach((m) => {
+        const mr = m.getBoundingClientRect();
+        m.classList.toggle('is-triggered', mr.top + 24 < probe);
+      });
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
     return () => {
-      if (el) observer.unobserve(el);
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
     };
   }, []);
 
   return (
-    <section id="experience" className="experience" ref={sectionRef}>
-      <div className="experience-container">
-        
-        {/* Header */}
-        <div className={`experience-header ${isVisible ? 'show' : 'hidden-top'}`}>
-          <h2 className="section-title">Work Experience</h2>
-          <p className="section-subtitle">My Professional Journey</p>
+    <section id="experience" className="section experience" aria-labelledby="experience-title">
+      <div className="wrap">
+        <div className="section-head">
+          <h2 id="experience-title" className="section-title" data-reveal="sweep">
+            Work <em>experience</em>
+          </h2>
+          <p className="section-intro" data-reveal style={{ '--d': '120ms' }}>
+            Hands-on engineering and production delivery, from current client systems back to my
+            senior design research.
+          </p>
         </div>
 
-        {/* Timeline Track & Cards */}
-        <div className="experience-timeline">
-          <div className="timeline-connector-bar" />
-          {experiences.map((exp, index) => (
-            <ExperienceCard 
-              key={index} 
-              exp={exp} 
-              index={index} 
-              isVisible={isVisible} 
-            />
+        <ol ref={logRef} className="acq-log">
+          {EXPERIENCE.map((exp, i) => (
+            <Entry key={exp.company} exp={exp} index={i} />
           ))}
-        </div>
-
+        </ol>
       </div>
     </section>
   );
